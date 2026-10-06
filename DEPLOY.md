@@ -45,6 +45,7 @@ Never commit `.env`. Set secrets only in Render’s dashboard.
 | Build command | `pip install -r backend/requirements.txt` |
 | Start command | `cd backend && gunicorn app.main:app -k uvicorn.workers.UvicornWorker -w 1 -b 0.0.0.0:$PORT` |
 | Plan | **Free** |
+| `PYTHON_VERSION` | **3.12.7** (required — do not use 3.14) |
 
 ---
 
@@ -60,6 +61,7 @@ Copy values from your local `.env` (except do not paste AWS until ready).
 | `OTP_ENABLED` | Yes | `false` (mobile sign-in only) |
 | `CORS_ORIGINS` | Yes | `https://YOUR-SERVICE.onrender.com` (exact URL, no trailing slash) |
 | `WEB_CONCURRENCY` | Yes | `1` on free plan |
+| `PYTHON_VERSION` | Yes | `3.12.7` (if not using Blueprint / `runtime.txt`) |
 | `AWS_*` | Later | Leave empty until S3 is configured; finalize will fail until then |
 
 After the first deploy, copy your public URL (e.g. `https://doctor-letter-xxxx.onrender.com`) and set `CORS_ORIGINS` to that HTTPS origin, then **Manual Deploy → Clear build cache & deploy** if you change CORS.
@@ -110,7 +112,8 @@ This keeps the app and Neon warmer; first click after long idle may still be slo
 
 | Problem | Fix |
 |--------|-----|
-| Build fails | Check Render logs; confirm `backend/requirements.txt` installs on Python 3.12 |
+| Build fails | Pin **Python 3.12.7** (`PYTHON_VERSION` in Render, plus root `runtime.txt`). Default 3.14 breaks `pydantic-core` (Rust build). |
+| `pydantic-core` / maturin / read-only filesystem | Same fix: set `PYTHON_VERSION=3.12.7`, clear build cache, redeploy. |
 | 502 on first visit | Free tier waking up; wait and retry; add cron health ping |
 | CORS / sign-in fails | `CORS_ORIGINS` must match exact browser origin (https + hostname) |
 | “AWS required” on start | Set `ENVIRONMENT=development` until AWS vars are set |
