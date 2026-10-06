@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f4f1" />
     <title>Your profile | Doctor Letter</title>
     <link rel="stylesheet" href="css/main.css" />
   </head>
@@ -14,10 +15,8 @@
       </header>
 
       <main class="card">
-        <h1 style="margin-top: 0">Your details</h1>
-        <p class="subtle">
-          This information is stored in your Neon database. Templates use it automatically.
-        </p>
+        <h1 class="page-title">Your details</h1>
+        <p class="subtle">Saved with your account. New letters pull your name and registration from here.</p>
         <div id="alert" aria-live="polite"></div>
 
         <form id="profile-form">
@@ -48,36 +47,47 @@
       </main>
     </div>
 
-    <script src="js/api.js"></script>
-    <script src="js/session.js"></script>
-    <script src="js/ui.js"></script>
-    <script>
-      (async function init() {
-        await Session.requireAuth();
-        const alertBox = document.getElementById("alert");
-        const profile = await Api.getProfile();
-        document.getElementById("mobile").value = profile.mobile;
-        document.getElementById("full-name").value = profile.full_name || "";
-        document.getElementById("registration").value = profile.registration_number || "";
-        document.getElementById("clinic-name").value = profile.clinic_name || "";
-        document.getElementById("clinic-address").value = profile.clinic_address || "";
-
-        document.getElementById("profile-form").addEventListener("submit", async (event) => {
-          event.preventDefault();
-          Ui.clearAlert(alertBox);
-          try {
-            await Api.saveProfile({
-              full_name: document.getElementById("full-name").value.trim(),
-              registration_number: document.getElementById("registration").value.trim(),
-              clinic_name: document.getElementById("clinic-name").value.trim(),
-              clinic_address: document.getElementById("clinic-address").value.trim(),
-            });
-            Ui.showAlert(alertBox, "Profile saved.", "success");
-          } catch (error) {
-            Ui.showAlert(alertBox, error.message);
+    <script src="js/profile-cache.js" defer></script>
+    <script src="js/api.js" defer></script>
+    <script src="js/session.js" defer></script>
+    <script src="js/ui.js" defer></script>
+    <script defer>
+      document.addEventListener("DOMContentLoaded", () => {
+        (async function init() {
+          await Session.requireAuth();
+          const alertBox = document.getElementById("alert");
+          const cached = ProfileCache.read();
+          if (cached) {
+            document.getElementById("mobile").value = cached.mobile;
+            document.getElementById("full-name").value = cached.full_name || "";
+            document.getElementById("registration").value = cached.registration_number || "";
+            document.getElementById("clinic-name").value = cached.clinic_name || "";
+            document.getElementById("clinic-address").value = cached.clinic_address || "";
           }
-        });
-      })();
+          const profile = await Api.getProfile();
+          document.getElementById("mobile").value = profile.mobile;
+          document.getElementById("full-name").value = profile.full_name || "";
+          document.getElementById("registration").value = profile.registration_number || "";
+          document.getElementById("clinic-name").value = profile.clinic_name || "";
+          document.getElementById("clinic-address").value = profile.clinic_address || "";
+
+          document.getElementById("profile-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            Ui.clearAlert(alertBox);
+            try {
+              await Api.saveProfile({
+                full_name: document.getElementById("full-name").value.trim(),
+                registration_number: document.getElementById("registration").value.trim(),
+                clinic_name: document.getElementById("clinic-name").value.trim(),
+                clinic_address: document.getElementById("clinic-address").value.trim(),
+              });
+              Ui.showAlert(alertBox, "Profile saved.", "success");
+            } catch (error) {
+              Ui.showAlert(alertBox, error.message);
+            }
+          });
+        })();
+      });
     </script>
   </body>
 </html>

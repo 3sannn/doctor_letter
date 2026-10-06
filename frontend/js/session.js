@@ -8,14 +8,31 @@ const Session = (() => {
   }
 
   async function requireAuth(redirectTo = "index.html") {
+    const cached = ProfileCache.read();
+    if (cached) {
+      return cached;
+    }
     try {
       const profile = await Api.me();
+      ProfileCache.write(profile);
       return profile;
     } catch {
+      ProfileCache.clear();
       window.location.href = redirectTo;
       return null;
     }
   }
 
-  return { maskMobile, requireAuth };
+  async function refreshAuth() {
+    try {
+      const profile = await Api.me();
+      ProfileCache.write(profile);
+      return profile;
+    } catch {
+      ProfileCache.clear();
+      return null;
+    }
+  }
+
+  return { maskMobile, requireAuth, refreshAuth };
 })();

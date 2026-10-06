@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f4f1" />
     <title>Workspace | Doctor Letter</title>
     <link rel="stylesheet" href="css/main.css" />
   </head>
@@ -15,9 +16,9 @@
 
       <main class="grid two">
         <section class="card hero">
-          <h1>Your workspace</h1>
-          <p>Start a new letter from a template, or revisit something you wrote earlier.</p>
-          <div class="btn-row" style="margin-top: 1.25rem">
+          <h1 class="page-title">Your workspace</h1>
+          <p>Start a letter from a template, or pick up a draft you already began.</p>
+          <div class="btn-row section-gap">
             <a class="btn btn-primary" href="templates.html">Create new letter</a>
             <a class="btn btn-secondary" href="history.html">Past letters</a>
             <a class="btn btn-ghost" href="profile.html">Your profile</a>
@@ -25,10 +26,10 @@
         </section>
 
         <section class="card">
-          <h2 style="margin-top: 0">Saved drafts</h2>
-          <p class="subtle">Drafts are kept in Neon until you finalize or remove them.</p>
+          <h2 class="section-title">Saved drafts</h2>
+          <p class="subtle">Drafts stay here until you finalize or remove them.</p>
           <ul id="draft-list" class="history-list"></ul>
-          <div class="btn-row" style="margin-top: 1.5rem">
+          <div class="btn-row section-gap-lg">
             <button type="button" class="btn btn-ghost" id="sign-out">Sign out</button>
           </div>
         </section>
@@ -39,11 +40,13 @@
       </footer>
     </div>
 
-    <script src="js/api.js"></script>
-    <script src="js/session.js"></script>
-    <script src="js/ui.js"></script>
-    <script>
-      (async function init() {
+    <script src="js/profile-cache.js" defer></script>
+    <script src="js/api.js" defer></script>
+    <script src="js/session.js" defer></script>
+    <script src="js/ui.js" defer></script>
+    <script defer>
+      document.addEventListener("DOMContentLoaded", () => {
+        (async function init() {
         const profile = await Session.requireAuth();
         if (!profile) {
           return;
@@ -83,6 +86,7 @@
           window.location.href = "index.html";
         });
       })();
+      });
     </script>
   </body>
 </html>

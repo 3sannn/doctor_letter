@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f4f1" />
     <title>Doctor Letter</title>
     <link rel="stylesheet" href="css/main.css" />
   </head>
@@ -13,15 +14,15 @@
       </header>
 
       <main class="card hero">
-        <h1>Write letters in a calm, focused space</h1>
+        <h1>Your letters, without extra steps</h1>
         <p>
-          Enter your mobile number to open your workspace. Choose a template, edit the
-          letter inline, and keep a private history of what you have sent.
+          Enter your mobile number to continue. Pick a template, edit the wording, and keep
+          a record of letters you have finalized.
         </p>
 
         <div id="alert" aria-live="polite"></div>
 
-        <form id="entry-form" class="card" style="margin-top: 1.25rem; box-shadow: none">
+        <form id="entry-form" class="card card-inset">
           <div class="field">
             <label for="mobile">Mobile number</label>
             <input
@@ -46,12 +47,20 @@
       </footer>
     </div>
 
-    <script src="js/api.js"></script>
-    <script src="js/ui.js"></script>
-    <script>
+    <script src="js/profile-cache.js" defer></script>
+    <script src="js/api.js" defer></script>
+    <script src="js/ui.js" defer></script>
+    <script defer>
+      document.addEventListener("DOMContentLoaded", () => {
       (async function init() {
+        const cached = ProfileCache.read();
+        if (cached) {
+          window.location.href = "dashboard.html";
+          return;
+        }
         try {
-          await Api.me();
+          const profile = await Api.me();
+          ProfileCache.write(profile);
           window.location.href = "dashboard.html";
           return;
         } catch {
@@ -74,6 +83,7 @@
           }
         });
       })();
+      });
     </script>
   </body>
 </html>

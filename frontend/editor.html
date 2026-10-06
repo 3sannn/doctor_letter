@@ -3,8 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f4f1" />
     <title>Edit letter | Doctor Letter</title>
     <link rel="stylesheet" href="css/main.css" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
   </head>
   <body>
@@ -19,7 +21,7 @@
 
         <section class="card editor-shell">
           <div>
-            <h1 id="template-title" style="margin-top: 0">Edit letter</h1>
+            <h1 id="template-title" class="page-title">Edit letter</h1>
             <p class="subtle" id="template-description"></p>
             <p class="hint" id="autosave-status"></p>
             <div class="field">
@@ -32,11 +34,11 @@
           <aside class="side-panel">
             <h3>Before you save</h3>
             <ul>
-              <li>Preview the PDF layout before finalizing.</li>
-              <li>Drafts are saved in Neon as you edit.</li>
-              <li>Final PDFs are stored in your AWS S3 bucket.</li>
+              <li>Preview the PDF if layout matters.</li>
+              <li>Your draft saves as you edit.</li>
+              <li>Final copies stay in your history for download.</li>
             </ul>
-            <div class="btn-row" style="margin-top: 1rem">
+            <div class="btn-row">
               <button type="button" class="btn btn-secondary" id="preview-letter">Preview PDF</button>
               <button type="button" class="btn btn-primary" id="save-letter">Generate and save PDF</button>
             </div>
@@ -48,17 +50,18 @@
     <div id="preview-modal" class="modal-overlay" hidden>
       <div class="modal-card" role="dialog" aria-labelledby="preview-title">
         <div class="modal-header">
-          <h2 id="preview-title" style="margin: 0">Letter preview</h2>
+          <h2 id="preview-title" class="modal-title">Letter preview</h2>
           <button type="button" class="btn btn-ghost" id="close-preview">Close</button>
         </div>
         <iframe id="preview-frame" class="preview-frame" title="PDF preview"></iframe>
       </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-    <script src="js/api.js"></script>
-    <script src="js/session.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/editor-page.js"></script>
+    <script src="js/profile-cache.js" defer></script>
+    <script src="js/api.js" defer></script>
+    <script src="js/session.js" defer></script>
+    <script src="js/ui.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js" defer></script>
+    <script src="js/editor-page.js" defer></script>
   </body>
 </html>

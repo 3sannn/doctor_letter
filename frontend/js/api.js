@@ -43,9 +43,19 @@ const Api = (() => {
       return request("/api/session", {
         method: "POST",
         body: JSON.stringify({ mobile }),
+      }).then((body) => {
+        ProfileCache.write({
+          mobile: body.mobile,
+          full_name: "",
+          registration_number: "",
+          clinic_name: "",
+          clinic_address: "",
+        });
+        return body;
       });
     },
     logout() {
+      ProfileCache.clear();
       return request("/api/session/logout", { method: "POST" });
     },
     me() {
@@ -58,6 +68,9 @@ const Api = (() => {
       return request("/api/profile", {
         method: "PUT",
         body: JSON.stringify(payload),
+      }).then((profile) => {
+        ProfileCache.write(profile);
+        return profile;
       });
     },
     listTemplates() {

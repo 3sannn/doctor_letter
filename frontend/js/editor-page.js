@@ -1,4 +1,5 @@
 (function () {
+  document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
   const slug = params.get("template");
 
@@ -55,7 +56,7 @@
 
   function scheduleAutosave() {
     clearTimeout(autosaveTimer);
-    autosaveTimer = setTimeout(persistDraft, 2000);
+    autosaveTimer = setTimeout(persistDraft, 4500);
   }
 
   function openPreviewModal(base64Pdf) {
@@ -170,4 +171,5 @@
   }
 
   init();
+  });
 })();
