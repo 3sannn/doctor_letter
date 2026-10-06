@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy | Doctor Letter</title>
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="site-header">
+        <div class="brand">Doctor <span>Letter</span></div>
+        <a class="btn btn-ghost" href="index.html">Home</a>
+      </header>
+
+      <main class="card hero">
+        <h1>Privacy and data handling</h1>
+        <p class="subtle">How this app treats doctor and patient information.</p>
+
+        <h2>Stored in Neon (PostgreSQL)</h2>
+        <ul>
+          <li>Your mobile number and professional profile (name, registration, clinic).</li>
+          <li>Letter drafts while you are editing.</li>
+          <li>Letter history metadata (template type, patient name label, date, S3 file reference).</li>
+          <li>Audit events (sign-in, preview, finalize, download, delete) without full letter text.</li>
+        </ul>
+
+        <h2>Stored on AWS S3</h2>
+        <ul>
+          <li>Final PDF files only, encrypted at rest, accessed via short-lived download links.</li>
+        </ul>
+
+        <h2>Not stored after finalize</h2>
+        <ul>
+          <li>Full letter HTML is not kept once a PDF is saved. Only the PDF in S3 and summary fields in Neon.</li>
+        </ul>
+
+        <h2>Your choices</h2>
+        <ul>
+          <li>Delete finalized letters from history (removes the Neon record and the S3 file).</li>
+          <li>Sign out on shared devices when you finish.</li>
+        </ul>
+
+        <p class="hint">
+          Use this application only on trusted networks and devices. Contact your clinic administrator
+          for retention policies required in your region.
+        </p>
+      </main>
+    </div>
+  </body>
+</html>
