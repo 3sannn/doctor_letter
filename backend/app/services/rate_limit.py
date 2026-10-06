@@ -20,19 +20,25 @@ class SessionRateLimiter:
         ip = forwarded.split(",")[0].strip() if forwarded else (request.client.host if request.client else "unknown")
         return hashlib.sha256(ip.encode("utf-8")).hexdigest()[:16]
 
-    def check(self, request: Request) -> None:
-        key = self._client_key(request)
+    def check(self, request: Request, mobile: str | None = None) -> None:
+        keys = [self._client_key(request)]
+        if mobile:
+            mobile_hash = hashlib.sha256(mobile.encode("utf-8")).hexdigest()[:16]
+            keys.append(f"m:{mobile_hash}")
+
         now = time.time()
         with self._lock:
-            bucket = self._events[key]
-            while bucket and now - bucket[0] > self.window_seconds:
-                bucket.popleft()
-            if len(bucket) >= self.max_attempts:
-                raise HTTPException(
-                    status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-                    detail="Too many sign-in attempts. Please wait and try again.",
-                )
-            bucket.append(now)
+            for key in keys:
+                bucket = self._events[key]
+                while bucket and now - bucket[0] > self.window_seconds:
+                    bucket.popleft()
+                if len(bucket) >= self.max_attempts:
+                    raise HTTPException(
+                        status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                        detail="Too many sign-in attempts. Please wait and try again.",
+                    )
+            for key in keys:
+                self._events[key].append(now)
 
 
 _limiter: SessionRateLimiter | None = None

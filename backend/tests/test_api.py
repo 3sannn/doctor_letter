@@ -8,9 +8,14 @@ def test_mobile_normalization():
     assert payload.mobile == "9876543210"
 
 
-def test_mobile_rejects_short():
+def test_mobile_rejects_invalid_indian_start():
     with pytest.raises(ValueError):
-        SessionCreate(mobile="123")
+        SessionCreate(mobile="5123456789")
+
+
+def test_session_rejects_honeypot():
+    with pytest.raises(ValueError):
+        SessionCreate(mobile="9123456789", company="spam")
 
 
 def test_health(client):
@@ -44,6 +49,7 @@ def test_templates_list(client):
     assert response.status_code == 200
     slugs = {item["slug"] for item in response.json()}
     assert "referral-letter" in slugs
+    assert "blank-letter" in slugs
     assert "medical-certificate" in slugs
 
 
@@ -77,7 +83,24 @@ def test_preview_pdf(auth_client):
     assert preview.json()["pdf_base64"]
 
 
-def test_finalize_requires_s3(auth_client, monkeypatch):
+def test_workspace_bundle(auth_client):
+    response = auth_client.get("/api/workspace")
+    assert response.status_code == 200
+    body = response.json()
+    assert "profile" in body
+    assert "drafts" in body
+    assert body["profile"]["mobile"] == "9123456789"
+
+
+def test_editor_setup(auth_client):
+    response = auth_client.get("/api/editor/referral-letter")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["slug"] == "referral-letter"
+    assert body["html"]
+
+
+def test_finalize_requires_s3(auth_client):
     from app.config import get_settings
 
     settings = get_settings()

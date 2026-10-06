@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+      - name: Pytest (validation tests)
+        env:
+          OTP_ENABLED: "false"
+          DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci
+          SECRET_KEY: ci-test-secret-key-at-least-32-chars-long
+        run: pytest -q tests/test_api.py::test_mobile_normalization tests/test_api.py::test_mobile_rejects_invalid_indian_start tests/test_api.py::test_session_rejects_honeypot

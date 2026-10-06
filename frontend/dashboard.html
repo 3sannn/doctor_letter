@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f6f4f1" />
+    <meta name="theme-color" content="#f3f1ec" />
     <title>Workspace | Doctor Letter</title>
     <link rel="stylesheet" href="css/main.css" />
   </head>
@@ -11,11 +11,11 @@
     <div class="shell">
       <header class="site-header">
         <div class="brand">Doctor <span>Letter</span></div>
-        <p class="subtle" id="mobile-label"></p>
+        <p class="subtle mobile-tag" id="mobile-label"></p>
       </header>
 
       <main class="grid two">
-        <section class="card hero">
+        <section class="card hero card-accent">
           <h1 class="page-title">Your workspace</h1>
           <p>Start a letter from a template, or pick up a draft you already began.</p>
           <div class="btn-row section-gap">
@@ -28,7 +28,7 @@
         <section class="card">
           <h2 class="section-title">Saved drafts</h2>
           <p class="subtle">Drafts stay here until you finalize or remove them.</p>
-          <ul id="draft-list" class="history-list"></ul>
+          <ul id="draft-list" class="history-list" aria-live="polite"></ul>
           <div class="btn-row section-gap-lg">
             <button type="button" class="btn btn-ghost" id="sign-out">Sign out</button>
           </div>
@@ -41,52 +41,11 @@
     </div>
 
     <script src="js/profile-cache.js" defer></script>
+    <script src="js/workspace-cache.js" defer></script>
+    <script src="js/http-client.js" defer></script>
     <script src="js/api.js" defer></script>
     <script src="js/session.js" defer></script>
     <script src="js/ui.js" defer></script>
-    <script defer>
-      document.addEventListener("DOMContentLoaded", () => {
-        (async function init() {
-        const profile = await Session.requireAuth();
-        if (!profile) {
-          return;
-        }
-        document.getElementById("mobile-label").textContent = Session.maskMobile(profile.mobile);
-
-        const draftList = document.getElementById("draft-list");
-        try {
-          const drafts = await Api.listDrafts();
-          if (!drafts.length) {
-            draftList.innerHTML = '<li class="empty-state">No drafts yet.</li>';
-          } else {
-            draftList.innerHTML = "";
-            drafts.forEach((draft) => {
-              const item = document.createElement("li");
-              item.className = "history-item";
-              item.innerHTML = `
-                <div>
-                  <h3>${draft.template_slug.replace(/-/g, " ")}</h3>
-                  <div class="history-meta">${draft.patient_name || "Patient"} · ${Ui.formatDate(draft.updated_at)}</div>
-                </div>
-              `;
-              const resume = document.createElement("a");
-              resume.className = "btn btn-secondary";
-              resume.href = `editor.html?template=${encodeURIComponent(draft.template_slug)}`;
-              resume.textContent = "Continue";
-              item.appendChild(resume);
-              draftList.appendChild(item);
-            });
-          }
-        } catch {
-          draftList.innerHTML = '<li class="empty-state">Could not load drafts.</li>';
-        }
-
-        document.getElementById("sign-out").addEventListener("click", async () => {
-          await Api.logout();
-          window.location.href = "index.html";
-        });
-      })();
-      });
-    </script>
+    <script src="js/dashboard-page.js" defer></script>
   </body>
 </html>

@@ -16,13 +16,13 @@
       <main class="card hero">
         <h1>Your letters, without extra steps</h1>
         <p>
-          Enter your mobile number to continue. Pick a template, edit the wording, and keep
-          a record of letters you have finalized.
+          Sign in with the mobile number tied to your workspace. Pick a template, edit the wording,
+          and keep a record of letters you have finalized.
         </p>
 
         <div id="alert" aria-live="polite"></div>
 
-        <form id="entry-form" class="card card-inset">
+        <form id="entry-form" class="card card-inset" novalidate>
           <div class="field">
             <label for="mobile">Mobile number</label>
             <input
@@ -31,13 +31,27 @@
               type="tel"
               inputmode="numeric"
               autocomplete="tel"
+              autocapitalize="off"
+              autocorrect="off"
+              spellcheck="false"
+              maxlength="15"
+              pattern="[0-9]{10,15}"
               placeholder="10-digit mobile number"
               required
             />
-            <span class="hint">We use this number to show your letter history. No password required.</span>
+            <span class="hint" id="entry-hint">
+              Digits only. Your session is stored in a secure cookie on this device. Sign out on shared
+              phones or clinic computers when you finish.
+            </span>
           </div>
+
+          <div class="visually-hidden" aria-hidden="true">
+            <label for="company">Company</label>
+            <input id="company" name="company" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
           <div class="btn-row">
-            <button type="submit" class="btn btn-primary">Continue to workspace</button>
+            <button type="submit" class="btn btn-primary" id="entry-submit">Continue to workspace</button>
           </div>
         </form>
       </main>
@@ -48,42 +62,10 @@
     </div>
 
     <script src="js/profile-cache.js" defer></script>
+    <script src="js/workspace-cache.js" defer></script>
+    <script src="js/http-client.js" defer></script>
     <script src="js/api.js" defer></script>
     <script src="js/ui.js" defer></script>
-    <script defer>
-      document.addEventListener("DOMContentLoaded", () => {
-      (async function init() {
-        const cached = ProfileCache.read();
-        if (cached) {
-          window.location.href = "dashboard.html";
-          return;
-        }
-        try {
-          const profile = await Api.me();
-          ProfileCache.write(profile);
-          window.location.href = "dashboard.html";
-          return;
-        } catch {
-          /* not signed in */
-        }
-
-        const form = document.getElementById("entry-form");
-        const alertBox = document.getElementById("alert");
-
-        form.addEventListener("submit", async (event) => {
-          event.preventDefault();
-          Ui.clearAlert(alertBox);
-
-          const mobile = document.getElementById("mobile").value.trim();
-          try {
-            await Api.startSession(mobile);
-            window.location.href = "dashboard.html";
-          } catch (error) {
-            Ui.showAlert(alertBox, error.message);
-          }
-        });
-      })();
-      });
-    </script>
+    <script src="js/entry-page.js" defer></script>
   </body>
 </html>

@@ -32,6 +32,24 @@ class Settings(BaseSettings):
 
     s3_presign_expiry_seconds: int = 900
 
+    db_pool_size: int = 10
+    db_max_overflow: int = 20
+
+    otp_enabled: bool = False
+    otp_ttl_minutes: int = 10
+    otp_max_attempts: int = 5
+    otp_resend_cooldown_seconds: int = 60
+    otp_max_requests_per_hour: int = 5
+
+    twilio_account_sid: str = ""
+    twilio_auth_token: str = ""
+    twilio_phone_number: str = ""
+    sms_default_country_code: str = "91"
+
+    otp_dev_mode: bool = False
+
+    static_cache_seconds: int = 604800
+
     @property
     def is_production(self) -> bool:
         return self.environment.lower() == "production"

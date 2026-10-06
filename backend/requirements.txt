@@ -8,3 +8,5 @@ python-multipart==0.0.20
 boto3==1.35.76
 xhtml2pdf==0.2.16
 itsdangerous==2.2.0
+twilio==9.4.1
+gunicorn==23.0.0

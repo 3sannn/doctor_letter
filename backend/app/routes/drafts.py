@@ -87,7 +87,6 @@ def save_draft(
         db.add(row)
     db.commit()
     db.refresh(row)
-    record_audit(db, doctor.id, "draft_save", request, detail=payload.template_slug)
     return DraftDetail(
         id=row.id,
         template_slug=row.template_slug,

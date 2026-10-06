@@ -18,6 +18,7 @@ def list_letter_templates():
             slug=item.slug,
             label=item.label,
             description=item.description,
+            group=item.group,
         )
         for item in template_loader.list_templates()
     ]
@@ -41,5 +42,6 @@ def get_letter_template(
         slug=template.slug,
         label=template.label,
         description=template.description,
+        group=template.group,
         html=html,
     )

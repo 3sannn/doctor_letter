@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f6f4f1" />
+    <meta name="theme-color" content="#f3f1ec" />
     <title>Choose template | Doctor Letter</title>
     <link rel="stylesheet" href="css/main.css" />
   </head>
@@ -14,43 +14,31 @@
         <a class="btn btn-ghost" href="dashboard.html">Back</a>
       </header>
 
-      <main class="card">
-        <h1 class="page-title">Choose a letter template</h1>
-        <p class="subtle">Open one, adjust the wording, then save when it reads right.</p>
-        <div id="alert" aria-live="polite"></div>
-        <div id="template-grid" class="grid three grid-top"></div>
+      <main>
+        <section class="card card-accent blank-starter">
+          <h2 class="section-title">Write your own letter</h2>
+          <p class="subtle">
+            Start from a blank page with your clinic details at the top. The same rich text editor
+            is used for every template.
+          </p>
+          <a class="btn btn-primary" href="editor.html?template=blank-letter">Start blank letter</a>
+        </section>
+
+        <section class="card grid-top">
+          <h1 class="page-title">Letter templates</h1>
+          <p class="subtle">Pick a starting point, then edit every line before you save.</p>
+          <div id="alert" aria-live="polite"></div>
+          <div id="template-sections"></div>
+        </section>
       </main>
     </div>
 
     <script src="js/profile-cache.js" defer></script>
+    <script src="js/template-cache.js" defer></script>
+    <script src="js/http-client.js" defer></script>
     <script src="js/api.js" defer></script>
     <script src="js/session.js" defer></script>
     <script src="js/ui.js" defer></script>
-    <script defer>
-      document.addEventListener("DOMContentLoaded", () => {
-        (async function init() {
-          await Session.requireAuth();
-          const grid = document.getElementById("template-grid");
-          const alertBox = document.getElementById("alert");
-
-          try {
-            const templates = await Api.listTemplates();
-            grid.innerHTML = "";
-            templates.forEach((item) => {
-              const button = document.createElement("button");
-              button.type = "button";
-              button.className = "template-tile";
-              button.innerHTML = `<strong>${item.label}</strong><span>${item.description}</span>`;
-              button.addEventListener("click", () => {
-                window.location.href = `editor.html?template=${encodeURIComponent(item.slug)}`;
-              });
-              grid.appendChild(button);
-            });
-          } catch (error) {
-            Ui.showAlert(alertBox, error.message);
-          }
-        })();
-      });
-    </script>
+    <script src="js/templates-page.js" defer></script>
   </body>
 </html>

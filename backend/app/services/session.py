@@ -71,4 +71,9 @@ def set_session_cookie(response, token: str, settings: Settings) -> None:
 
 
 def clear_session_cookie(response, settings: Settings) -> None:
-    response.delete_cookie(key=settings.session_cookie_name, path="/")
+    response.delete_cookie(
+        key=settings.session_cookie_name,
+        path="/",
+        secure=settings.is_production,
+        samesite="lax",
+    )

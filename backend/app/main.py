@@ -3,6 +3,7 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
@@ -10,8 +11,19 @@ from starlette.requests import Request
 from app.config import get_settings
 from app.database import Base, engine
 from app.database_migrate import run_migrations
-from app.routes import drafts, health, letters, profile, session, templates
+from app.routes import drafts, health, letters, profile, session, templates, workspace
 from app.startup import validate_settings
+
+
+class StaticCacheMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        path = request.url.path
+        settings = get_settings()
+        max_age = settings.static_cache_seconds
+        if path.startswith("/css/") or path.startswith("/js/") or path.startswith("/vendor/"):
+            response.headers["Cache-Control"] = f"public, max-age={max_age}, immutable"
+        return response
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
@@ -42,6 +54,8 @@ def create_app() -> FastAPI:
 
     app = FastAPI(title="Doctor Letter", lifespan=lifespan, docs_url=docs_url, redoc_url=redoc_url)
 
+    app.add_middleware(GZipMiddleware, minimum_size=500)
+    app.add_middleware(StaticCacheMiddleware)
     app.add_middleware(SecurityHeadersMiddleware)
     app.add_middleware(
         CORSMiddleware,
@@ -53,6 +67,7 @@ def create_app() -> FastAPI:
 
     app.include_router(health.router)
     app.include_router(session.router)
+    app.include_router(workspace.router)
     app.include_router(profile.router)
     app.include_router(templates.router)
     app.include_router(drafts.router)

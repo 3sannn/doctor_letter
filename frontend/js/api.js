@@ -1,65 +1,43 @@
 const Api = (() => {
-  const base = "";
+  function request(path, options) {
+    return HttpClient.request(path, options);
+  }
 
-  async function request(path, options = {}) {
-    const response = await fetch(`${base}${path}`, {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        ...(options.headers || {}),
-      },
-      ...options,
+  function afterSignIn(body) {
+    ProfileCache.write({
+      mobile: body.mobile,
+      full_name: "",
+      registration_number: "",
+      clinic_name: "",
+      clinic_address: "",
     });
-
-    let data = null;
-    const text = await response.text();
-    if (text) {
-      try {
-        data = JSON.parse(text);
-      } catch {
-        data = text;
-      }
-    }
-
-    if (!response.ok) {
-      let message = "Something went wrong. Please try again.";
-      if (data && data.detail) {
-        if (Array.isArray(data.detail)) {
-          message = data.detail.map((item) => item.msg || item).join(" ");
-        } else if (typeof data.detail === "string") {
-          message = data.detail;
-        } else {
-          message = JSON.stringify(data.detail);
-        }
-      }
-      throw new Error(message);
-    }
-
-    return data;
+    WorkspaceCache.clear();
+    return body;
   }
 
   return {
-    startSession(mobile) {
+    startSession(mobile, company = "") {
       return request("/api/session", {
         method: "POST",
-        body: JSON.stringify({ mobile }),
-      }).then((body) => {
-        ProfileCache.write({
-          mobile: body.mobile,
-          full_name: "",
-          registration_number: "",
-          clinic_name: "",
-          clinic_address: "",
-        });
-        return body;
-      });
+        body: JSON.stringify({ mobile, company }),
+      }).then(afterSignIn);
     },
     logout() {
       ProfileCache.clear();
+      WorkspaceCache.clear();
       return request("/api/session/logout", { method: "POST" });
     },
     me() {
       return request("/api/session/me");
+    },
+    loadWorkspace() {
+      return request("/api/workspace").then((payload) => {
+        WorkspaceCache.write(payload);
+        return payload;
+      });
+    },
+    loadEditor(slug) {
+      return request(`/api/editor/${encodeURIComponent(slug)}`);
     },
     getProfile() {
       return request("/api/profile");
@@ -70,11 +48,19 @@ const Api = (() => {
         body: JSON.stringify(payload),
       }).then((profile) => {
         ProfileCache.write(profile);
+        WorkspaceCache.clear();
         return profile;
       });
     },
     listTemplates() {
-      return request("/api/templates");
+      const cached = TemplateCache.read();
+      if (cached) {
+        return Promise.resolve(cached);
+      }
+      return request("/api/templates").then((list) => {
+        TemplateCache.write(list);
+        return list;
+      });
     },
     getTemplate(slug) {
       return request(`/api/templates/${encodeURIComponent(slug)}`);
@@ -107,6 +93,9 @@ const Api = (() => {
       return request("/api/letters/finalize", {
         method: "POST",
         body: JSON.stringify(payload),
+      }).then((letter) => {
+        WorkspaceCache.clear();
+        return letter;
       });
     },
     downloadLetter(id) {

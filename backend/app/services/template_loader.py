@@ -11,26 +11,79 @@ class LetterTemplate:
     label: str
     description: str
     filename: str
+    group: str = "clinical"
 
 
 TEMPLATES: tuple[LetterTemplate, ...] = (
     LetterTemplate(
+        slug="blank-letter",
+        label="Blank letter",
+        description="Your letterhead only. Write the full letter yourself in the editor.",
+        filename="blank.html",
+        group="custom",
+    ),
+    LetterTemplate(
         slug="referral-letter",
-        label="Referral Letter",
-        description="Refer a patient to a specialist with clinical context.",
+        label="Referral letter",
+        description="Refer a patient to a colleague or specialist with clinical context.",
         filename="referral.html",
+        group="clinical",
+    ),
+    LetterTemplate(
+        slug="follow-up-letter",
+        label="Follow-up letter",
+        description="Summarise the visit and next steps for the patient.",
+        filename="follow_up.html",
+        group="clinical",
+    ),
+    LetterTemplate(
+        slug="discharge-summary",
+        label="Discharge summary",
+        description="Handover summary after admission or a procedure.",
+        filename="discharge_summary.html",
+        group="clinical",
     ),
     LetterTemplate(
         slug="thank-you-letter",
-        label="Thank You Letter",
-        description="Send a thoughtful note of appreciation to a patient or colleague.",
+        label="Thank you letter",
+        description="A short note of thanks to a patient or colleague.",
         filename="thank_you.html",
+        group="general",
     ),
     LetterTemplate(
         slug="medical-certificate",
-        label="Medical Certificate",
-        description="Document fitness, rest, or return-to-work guidance.",
+        label="Medical certificate",
+        description="Fitness, rest, or return-to-work wording.",
         filename="medical_certificate.html",
+        group="certificates",
+    ),
+    LetterTemplate(
+        slug="sick-leave-note",
+        label="Sick leave note",
+        description="Recommend time away from work with clinical reason.",
+        filename="sick_leave.html",
+        group="certificates",
+    ),
+    LetterTemplate(
+        slug="fitness-for-duty",
+        label="Fitness for duty",
+        description="Confirm whether a patient may resume work or duties.",
+        filename="fitness_for_duty.html",
+        group="certificates",
+    ),
+    LetterTemplate(
+        slug="procedure-consent",
+        label="Procedure consent",
+        description="Document that risks and consent were explained.",
+        filename="procedure_consent.html",
+        group="clinical",
+    ),
+    LetterTemplate(
+        slug="records-request",
+        label="Records request",
+        description="Request files from another hospital or clinic.",
+        filename="records_request.html",
+        group="administrative",
     ),
 )
 
@@ -54,12 +107,16 @@ def hydrate_placeholders(html: str, doctor: Doctor | None = None) -> str:
     registration = (
         doctor.registration_number if doctor and doctor.registration_number else "Registration number"
     ).strip()
+    clinic_name = (doctor.clinic_name if doctor and doctor.clinic_name else "Clinic name").strip()
+    clinic_address = (doctor.clinic_address if doctor and doctor.clinic_address else "Clinic address").strip()
     replacements = {
         "{{date}}": today,
         "{{doctor_name}}": doctor_name,
         "{{patient_name}}": "Patient Name",
         "{{diagnosis}}": "Brief clinical summary",
         "{{registration_number}}": registration,
+        "{{clinic_name}}": clinic_name,
+        "{{clinic_address}}": clinic_address,
         "{{rest_or_fitness_note}}": "Rest / fitness guidance for the patient.",
     }
     result = html

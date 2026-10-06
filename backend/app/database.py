@@ -6,7 +6,10 @@ from app.config import get_settings
 settings = get_settings()
 database_url = settings.sqlalchemy_database_url
 
-engine_kwargs = {"pool_pre_ping": True}
+engine_kwargs: dict = {"pool_pre_ping": True}
+if database_url.startswith("postgresql"):
+    engine_kwargs["pool_size"] = settings.db_pool_size
+    engine_kwargs["max_overflow"] = settings.db_max_overflow
 if database_url.startswith("sqlite"):
     engine_kwargs["connect_args"] = {"check_same_thread": False}
 

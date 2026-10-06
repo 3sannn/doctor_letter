@@ -1,3 +1,8 @@
+import os
+
+os.environ.setdefault("OTP_ENABLED", "false")
+os.environ.setdefault("OTP_DEV_MODE", "true")
+
 import pytest
 from fastapi.testclient import TestClient
 

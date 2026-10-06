@@ -5,6 +5,37 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class SessionCreate(BaseModel):
+    mobile: str = Field(..., min_length=10, max_length=20)
+    company: str = Field(default="", max_length=200)
+
+    @field_validator("company")
+    @classmethod
+    def reject_honeypot(cls, value: str) -> str:
+        if value.strip():
+            raise ValueError("Unable to sign in. Check your number and try again.")
+        return ""
+
+    @field_validator("mobile")
+    @classmethod
+    def normalize_mobile(cls, value: str) -> str:
+        digits = "".join(ch for ch in value.strip() if ch.isdigit())
+        if len(digits) < 10 or len(digits) > 15:
+            raise ValueError("Enter a valid mobile number.")
+        if len(digits) == 10 and digits[0] not in "6789":
+            raise ValueError("Enter a valid mobile number.")
+        return digits
+
+
+class SessionResponse(BaseModel):
+    mobile: str
+    message: str = "You are signed in."
+
+
+class SessionBootstrap(BaseModel):
+    otp_enabled: bool
+
+
+class OtpRequest(BaseModel):
     mobile: str = Field(..., min_length=10, max_length=15)
 
     @field_validator("mobile")
@@ -16,9 +47,28 @@ class SessionCreate(BaseModel):
         return digits
 
 
-class SessionResponse(BaseModel):
-    mobile: str
-    message: str = "You are signed in."
+class OtpVerify(BaseModel):
+    mobile: str = Field(..., min_length=10, max_length=15)
+    code: str = Field(..., min_length=4, max_length=8)
+
+    @field_validator("mobile")
+    @classmethod
+    def normalize_mobile(cls, value: str) -> str:
+        digits = "".join(ch for ch in value.strip() if ch.isdigit())
+        if len(digits) < 10 or len(digits) > 15:
+            raise ValueError("Enter a valid mobile number.")
+        return digits
+
+    @field_validator("code")
+    @classmethod
+    def normalize_code(cls, value: str) -> str:
+        return value.strip()
+
+
+class OtpRequestResponse(BaseModel):
+    message: str
+    expires_in_minutes: int
+    dev_code: Optional[str] = None
 
 
 class DoctorProfile(BaseModel):
@@ -40,6 +90,7 @@ class TemplateSummary(BaseModel):
     slug: str
     label: str
     description: str
+    group: str = "clinical"
 
 
 class TemplateDetail(TemplateSummary):
@@ -94,3 +145,16 @@ class DraftSave(BaseModel):
 
 class MessageResponse(BaseModel):
     message: str
+
+
+class WorkspaceResponse(BaseModel):
+    profile: DoctorProfile
+    drafts: list[DraftSummary]
+
+
+class EditorSetupResponse(BaseModel):
+    slug: str
+    label: str
+    description: str
+    html: str
+    draft: Optional[DraftDetail] = None

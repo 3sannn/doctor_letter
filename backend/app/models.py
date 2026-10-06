@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, String, Text
+from sqlalchemy import DateTime, ForeignKey, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -44,6 +44,7 @@ class Letter(Base):
 
 class LetterDraft(Base):
     __tablename__ = "letter_drafts"
+    __table_args__ = (UniqueConstraint("doctor_id", "template_slug", name="uq_draft_doctor_template"),)
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_uuid)
     doctor_id: Mapped[str] = mapped_column(String(36), ForeignKey("doctors.id"), index=True, nullable=False)
@@ -66,3 +67,14 @@ class AuditEvent(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
 
     doctor: Mapped["Doctor"] = relationship(back_populates="audit_events")
+
+
+class OtpVerification(Base):
+    __tablename__ = "otp_verifications"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_uuid)
+    mobile: Mapped[str] = mapped_column(String(20), index=True, nullable=False)
+    code_hash: Mapped[str] = mapped_column(String(128), nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, index=True)
+    attempts: Mapped[int] = mapped_column(default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
