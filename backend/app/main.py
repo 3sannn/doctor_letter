@@ -11,7 +11,9 @@ from starlette.requests import Request
 from app.config import get_settings
 from app.database import Base, engine
 from app.database_migrate import run_migrations
+from app.middleware.pretty_urls import PrettyUrlMiddleware
 from app.routes import drafts, health, letters, profile, session, templates, workspace
+from app.routes.pages import register_frontend_pages
 from app.startup import validate_settings
 
 
@@ -57,6 +59,7 @@ def create_app() -> FastAPI:
     app.add_middleware(GZipMiddleware, minimum_size=500)
     app.add_middleware(StaticCacheMiddleware)
     app.add_middleware(SecurityHeadersMiddleware)
+    app.add_middleware(PrettyUrlMiddleware)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origin_list,
@@ -75,6 +78,7 @@ def create_app() -> FastAPI:
 
     frontend_dir = Path(__file__).resolve().parent.parent.parent / "frontend"
     if frontend_dir.is_dir():
+        register_frontend_pages(app, frontend_dir)
         app.mount("/", StaticFiles(directory=str(frontend_dir), html=True), name="frontend")
 
     return app

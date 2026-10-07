@@ -84,7 +84,7 @@ const Ui = (() => {
           title: "No drafts in progress",
           body: "When you start a letter, it will appear here until you finalize it.",
           actionLabel: "Create new letter",
-          actionHref: "templates.html",
+          actionHref: Paths.templates,
           icon: "pen",
         })
       );
@@ -106,11 +106,11 @@ const Ui = (() => {
         </div>
       `;
       const actions = document.createElement("div");
-      actions.className = "btn-row history-item-actions";
+      actions.className = "btn-row history-item-actions btn-row--grid";
 
       const resume = document.createElement("a");
       resume.className = "btn btn-secondary";
-      resume.href = `editor.html?template=${encodeURIComponent(draft.template_slug)}`;
+      resume.href = Paths.editor(draft.template_slug);
       resume.innerHTML = `${Icons.svg("chevronRight", "icon icon-inline")}<span>Continue</span>`;
 
       const remove = document.createElement("button");

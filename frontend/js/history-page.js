@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
             title: "No letters yet",
             body: "Your finalized letters will appear here with the date and patient label.",
             actionLabel: "Create a letter",
-            actionHref: "templates.html",
+            actionHref: Paths.templates,
             icon: "document",
           })
         );
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
         const actions = document.createElement("div");
-        actions.className = "btn-row history-item-actions";
+        actions.className = "btn-row history-item-actions btn-row--grid";
 
         const download = document.createElement("button");
         download.type = "button";

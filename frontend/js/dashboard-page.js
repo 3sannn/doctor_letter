@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("sign-out").addEventListener("click", async () => {
       await Api.logout();
-      window.location.href = "index.html";
+      window.location.href = Paths.home;
     });
   })();
 });

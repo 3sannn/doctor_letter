@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <span>${escapeTemplateText(item.description)}</span>
           `;
           button.addEventListener("click", () => {
-            window.location.href = `editor.html?template=${encodeURIComponent(item.slug)}`;
+            window.location.href = Paths.editor(item.slug);
           });
           grid.appendChild(button);
         });

@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f3f1ec" />
+    <meta name="theme-color" content="#efece6" />
     <title>Workspace | Doctor Letter</title>
-    <link rel="stylesheet" href="css/main.css?v=3" />
+    <link rel="stylesheet" href="css/main.css?v=6" />
   </head>
   <body>
     <div class="shell">
@@ -19,12 +19,12 @@
           <p class="workspace-greeting" id="workspace-greeting" hidden>Good day</p>
           <h1 class="page-title">Your workspace</h1>
           <p class="subtle">Start a new letter or continue a draft. Finalized PDFs are in past letters.</p>
-          <div class="btn-row section-gap">
-            <a class="btn btn-primary" href="templates.html">Create new letter</a>
-          </div>
-          <div class="workspace-links">
-            <a class="btn btn-secondary" href="history.html">Past letters</a>
-            <a class="btn btn-ghost" href="profile.html">Your profile</a>
+          <div class="workspace-actions section-gap">
+            <a class="btn btn-primary" href="/templates">Create new letter</a>
+            <div class="workspace-links">
+              <a class="btn btn-secondary" href="/history">Past letters</a>
+              <a class="btn btn-ghost" href="/profile">Your profile</a>
+            </div>
           </div>
         </section>
 
@@ -33,14 +33,14 @@
           <p class="subtle">One draft per template until you finalize. Remove a draft you no longer need.</p>
           <div id="draft-alert" aria-live="polite"></div>
           <ul id="draft-list" class="history-list section-gap" aria-live="polite"></ul>
-          <div class="btn-row section-gap-lg">
+          <div class="btn-row btn-row--start section-gap-lg">
             <button type="button" class="btn btn-ghost" id="sign-out">Sign out</button>
           </div>
         </section>
       </main>
 
       <footer class="site-footer">
-        <a href="privacy.html">Privacy and data handling</a>
+        <a href="/privacy">Privacy and data handling</a>
       </footer>
     </div>
 
@@ -48,9 +48,10 @@
     <script src="js/workspace-cache.js?v=2" defer></script>
     <script src="js/http-client.js?v=2" defer></script>
     <script src="js/api.js?v=2" defer></script>
-    <script src="js/session.js?v=2" defer></script>
+    <script src="js/paths.js?v=1" defer></script>
+    <script src="js/session.js?v=3" defer></script>
     <script src="js/icons.js?v=2" defer></script>
     <script src="js/ui.js?v=3" defer></script>
-    <script src="js/dashboard-page.js?v=3" defer></script>
+    <script src="js/dashboard-page.js?v=4" defer></script>
   </body>
 </html>

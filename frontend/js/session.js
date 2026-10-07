@@ -18,7 +18,9 @@ const Session = (() => {
       });
   }
 
-  async function requireAuth(redirectTo = "index.html") {
+  async function requireAuth(redirectTo) {
+    const fallback = typeof Paths !== "undefined" ? Paths.home : "/";
+    const target = redirectTo || fallback;
     const cached = ProfileCache.read();
     if (cached) {
       refreshProfileInBackground();
@@ -31,7 +33,7 @@ const Session = (() => {
     } catch {
       ProfileCache.clear();
       WorkspaceCache.clear();
-      window.location.href = redirectTo;
+      window.location.href = target;
       return null;
     }
   }

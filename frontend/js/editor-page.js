@@ -151,7 +151,7 @@
       const alertBox = document.getElementById("alert");
 
       if (!templateSlug) {
-        window.location.href = "templates.html";
+        window.location.href = Paths.templates;
         return;
       }
 
@@ -254,7 +254,7 @@
             draft_id: draftId,
           });
           setAutosaveStatus("Letter saved. Opening your history…");
-          window.location.href = "history.html";
+          window.location.href = Paths.history;
         } catch {
           Ui.showAlert(
             alertBox,

@@ -2,13 +2,13 @@ document.addEventListener("DOMContentLoaded", () => {
   (async function init() {
     const cached = ProfileCache.read();
     if (cached) {
-      window.location.href = "dashboard.html";
+      window.location.href = Paths.dashboard;
       return;
     }
     try {
       const profile = await Api.me();
       ProfileCache.write(profile);
-      window.location.href = "dashboard.html";
+      window.location.href = Paths.dashboard;
       return;
     } catch {
       /* not signed in */
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
       Ui.setButtonLoading(submitBtn, true, "Signing in…");
       try {
         await Api.startSession(mobile, companyField ? companyField.value : "");
-        window.location.href = "dashboard.html";
+        window.location.href = Paths.dashboard;
       } catch (error) {
         Ui.showAlert(alertBox, error.message);
         Ui.setButtonLoading(submitBtn, false);
