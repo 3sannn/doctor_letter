@@ -9,6 +9,7 @@
     let autosaveTimer = null;
     let sheetTimer = null;
     let activeTab = "edit";
+    const desktopLayout = window.matchMedia("(min-width: 900px)");
 
     function patientField() {
       return document.getElementById("patient-name");
@@ -33,9 +34,16 @@
       sheet.innerHTML = html;
     }
 
+    function shouldLiveSheetPreview() {
+      return desktopLayout.matches || activeTab === "sheet";
+    }
+
     function scheduleSheetPreview() {
+      if (!shouldLiveSheetPreview()) {
+        return;
+      }
       clearTimeout(sheetTimer);
-      sheetTimer = setTimeout(syncSheetPreview, 80);
+      sheetTimer = setTimeout(syncSheetPreview, 220);
     }
 
     function syncPatientNameIntoEditor(name) {
@@ -83,10 +91,26 @@
       autosaveTimer = setTimeout(persistDraft, 6000);
     }
 
+    let previewObjectUrl = "";
+
+    function revokePreviewObjectUrl() {
+      if (previewObjectUrl) {
+        URL.revokeObjectURL(previewObjectUrl);
+        previewObjectUrl = "";
+      }
+    }
+
     function openPreviewModal(base64Pdf) {
       const overlay = document.getElementById("preview-modal");
       const frame = document.getElementById("preview-frame");
-      frame.src = `data:application/pdf;base64,${base64Pdf}`;
+      revokePreviewObjectUrl();
+      const binary = atob(base64Pdf);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i += 1) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      previewObjectUrl = URL.createObjectURL(new Blob([bytes], { type: "application/pdf" }));
+      frame.src = previewObjectUrl;
       overlay.hidden = false;
       document.body.classList.add("modal-open");
       document.getElementById("close-preview")?.focus();
@@ -97,6 +121,7 @@
       const frame = document.getElementById("preview-frame");
       overlay.hidden = true;
       frame.src = "";
+      revokePreviewObjectUrl();
       document.body.classList.remove("modal-open");
     }
 
@@ -116,18 +141,20 @@
         tabSheet.setAttribute("aria-selected", !isEdit ? "true" : "false");
         panelEdit.hidden = !isEdit;
         panelSheet.hidden = isEdit;
+        panelEdit.setAttribute("aria-hidden", isEdit ? "false" : "true");
+        panelSheet.setAttribute("aria-hidden", isEdit ? "true" : "false");
         if (!isEdit) {
           syncSheetPreview();
+        } else if (sheetTimer) {
+          clearTimeout(sheetTimer);
         }
       }
 
       tabEdit.addEventListener("click", () => activate("edit"));
       tabSheet.addEventListener("click", () => activate("sheet"));
 
-      const mq = window.matchMedia("(min-width: 900px)");
-
       function applyLayout() {
-        if (mq.matches) {
+        if (desktopLayout.matches) {
           panelEdit.hidden = false;
           panelSheet.hidden = false;
           if (tabsBar) {
@@ -142,7 +169,7 @@
         }
       }
 
-      mq.addEventListener("change", applyLayout);
+      desktopLayout.addEventListener("change", applyLayout);
       applyLayout();
     }
 

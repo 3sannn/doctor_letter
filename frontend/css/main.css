@@ -471,10 +471,21 @@ a.btn:hover {
 .ql-container.ql-snow {
   border-radius: 0 0 var(--radius-sm) var(--radius-sm);
   border-color: var(--line);
-  min-height: min(52vh, 420px);
+  min-height: min(40vh, 320px);
+  max-height: min(52vh, 420px);
   font-family: var(--font-reading);
   font-size: 1rem;
   background: #fff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-panel .ql-editor {
+  flex: 1 1 auto;
+  min-height: 10rem;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .side-panel {
@@ -1102,6 +1113,46 @@ a.btn:hover {
   font-style: italic;
 }
 
+@media (max-width: 899px) {
+  .editor-columns {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+  }
+
+  .editor-main,
+  .editor-aside {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #panel-edit[hidden],
+  #panel-sheet[hidden] {
+    display: none !important;
+  }
+
+  #panel-edit:not([hidden]) {
+    display: block;
+  }
+
+  #panel-sheet:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .editor-aside {
+    gap: 1.15rem;
+  }
+
+  .doc-sheet {
+    max-height: min(58vh, 520px);
+  }
+
+  .editor-actions-panel {
+    margin-top: 0.15rem;
+  }
+}
+
 @media (min-width: 900px) {
   #panel-sheet[hidden] {
     display: flex !important;
@@ -1109,6 +1160,15 @@ a.btn:hover {
 
   #panel-edit[hidden] {
     display: block !important;
+  }
+
+  .ql-container.ql-snow {
+    min-height: min(52vh, 420px);
+    max-height: none;
+  }
+
+  .editor-panel .ql-editor {
+    max-height: min(60vh, 520px);
   }
 }
 

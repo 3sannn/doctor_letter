@@ -63,7 +63,6 @@ def preview_letter(
         pdf_bytes = build_pdf_from_editor_html(payload.html_content, template.label)
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
-    record_audit(db, doctor.id, "letter_preview", request, detail=template.slug)
     encoded = base64.b64encode(pdf_bytes).decode("ascii")
     return LetterPreviewResponse(pdf_base64=encoded)
 
