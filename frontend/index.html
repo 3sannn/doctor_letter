@@ -3,21 +3,21 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f6f4f1" />
+    <meta name="theme-color" content="#f3f1ec" />
     <title>Doctor Letter</title>
-    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/main.css?v=3" />
   </head>
-  <body>
-    <div class="shell">
-      <header class="site-header">
+  <body class="sign-in-page">
+    <div class="shell shell-narrow">
+      <header class="site-header site-header-minimal">
         <div class="brand">Doctor <span>Letter</span></div>
       </header>
 
       <main class="card hero">
         <h1>Your letters, without extra steps</h1>
-        <p>
-          Sign in with the mobile number tied to your workspace. Pick a template, edit the wording,
-          and keep a record of letters you have finalized.
+        <p class="sign-in-lead">
+          For doctors who write referral letters, certificates, and clinic correspondence.
+          Sign in with your mobile number to open your workspace.
         </p>
 
         <div id="alert" aria-live="polite"></div>
@@ -38,10 +38,10 @@
               pattern="[0-9]{10,15}"
               placeholder="10-digit mobile number"
               required
+              aria-describedby="entry-hint"
             />
             <span class="hint" id="entry-hint">
-              Digits only. Your session is stored in a secure cookie on this device. Sign out on shared
-              phones or clinic computers when you finish.
+              Digits only. Your session uses a secure cookie on this device.
             </span>
           </div>
 
@@ -54,18 +54,28 @@
             <button type="submit" class="btn btn-primary" id="entry-submit">Continue to workspace</button>
           </div>
         </form>
-      </main>
 
-      <footer class="site-footer">
-        Patient information is stored securely. <a href="privacy.html">Privacy and data handling</a>
-      </footer>
+        <p class="sign-in-trust">
+          <span id="trust-icon" aria-hidden="true"></span>
+          <span>Patient information is handled carefully. Read our <a href="privacy.html">privacy and data handling</a></span>
+        </p>
+      </main>
     </div>
 
-    <script src="js/profile-cache.js" defer></script>
-    <script src="js/workspace-cache.js" defer></script>
-    <script src="js/http-client.js" defer></script>
-    <script src="js/api.js" defer></script>
-    <script src="js/ui.js" defer></script>
-    <script src="js/entry-page.js" defer></script>
+    <script src="js/profile-cache.js?v=2" defer></script>
+    <script src="js/workspace-cache.js?v=2" defer></script>
+    <script src="js/http-client.js?v=2" defer></script>
+    <script src="js/api.js?v=2" defer></script>
+    <script src="js/icons.js?v=2" defer></script>
+    <script src="js/ui.js?v=2" defer></script>
+    <script src="js/entry-page.js?v=2" defer></script>
+    <script defer>
+      document.addEventListener("DOMContentLoaded", () => {
+        const node = document.getElementById("trust-icon");
+        if (node && typeof Icons !== "undefined") {
+          node.innerHTML = Icons.svg("shield", "icon");
+        }
+      });
+    </script>
   </body>
 </html>

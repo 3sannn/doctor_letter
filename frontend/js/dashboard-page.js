@@ -1,9 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
   (async function initDashboard() {
+    const draftList = document.getElementById("draft-list");
+    const draftAlert = document.getElementById("draft-alert");
+
     const cachedWorkspace = WorkspaceCache.read();
     if (cachedWorkspace) {
       Ui.setMobileLabel(cachedWorkspace.profile);
-      Ui.renderDraftList(document.getElementById("draft-list"), cachedWorkspace.drafts || []);
+      Ui.setWorkspaceGreeting(cachedWorkspace.profile);
+      Ui.renderDraftList(draftList, cachedWorkspace.drafts || [], draftAlert);
     }
 
     const profile = await Session.requireAuth();
@@ -12,14 +16,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     Ui.setMobileLabel(profile);
+    Ui.setWorkspaceGreeting(profile);
 
     try {
       const workspace = await Api.loadWorkspace();
-      Ui.renderDraftList(document.getElementById("draft-list"), workspace.drafts || []);
+      Ui.setWorkspaceGreeting(workspace.profile);
+      Ui.renderDraftList(draftList, workspace.drafts || [], draftAlert);
     } catch {
       if (!cachedWorkspace) {
-        document.getElementById("draft-list").innerHTML =
-          '<li class="empty-state">Could not load drafts.</li>';
+        draftList.innerHTML = "";
+        Ui.showAlert(draftAlert, "Could not load drafts. Refresh the page to try again.");
       }
     }
 

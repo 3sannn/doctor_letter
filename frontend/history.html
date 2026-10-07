@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f6f4f1" />
+    <meta name="theme-color" content="#f3f1ec" />
     <title>Past letters | Doctor Letter</title>
-    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/main.css?v=3" />
   </head>
   <body>
     <div class="shell">
@@ -16,97 +16,40 @@
 
       <main class="card">
         <h1 class="page-title">Past letters</h1>
-        <p class="subtle">Download a copy when you need it. Links stay valid for a short while.</p>
+        <p class="subtle">Finalized PDFs you can download again. Links expire after a short time.</p>
         <div id="alert" aria-live="polite"></div>
-        <ul id="history-list" class="history-list grid-top"></ul>
+
+        <div class="toolbar-row">
+          <label class="search-field">
+            <span class="icon" id="search-icon" aria-hidden="true"></span>
+            <input
+              type="search"
+              id="history-search"
+              placeholder="Search by template or patient"
+              autocomplete="off"
+            />
+          </label>
+          <span class="history-count" id="history-count" aria-live="polite"></span>
+        </div>
+
+        <ul id="history-list" class="history-list grid-top" aria-live="polite"></ul>
       </main>
     </div>
 
-    <script src="js/profile-cache.js" defer></script>
-    <script src="js/workspace-cache.js" defer></script>
-    <script src="js/http-client.js" defer></script>
-    <script src="js/api.js" defer></script>
-    <script src="js/session.js" defer></script>
-    <script src="js/ui.js" defer></script>
+    <script src="js/profile-cache.js?v=2" defer></script>
+    <script src="js/workspace-cache.js?v=2" defer></script>
+    <script src="js/http-client.js?v=2" defer></script>
+    <script src="js/api.js?v=2" defer></script>
+    <script src="js/session.js?v=2" defer></script>
+    <script src="js/icons.js?v=2" defer></script>
+    <script src="js/ui.js?v=2" defer></script>
+    <script src="js/history-page.js?v=2" defer></script>
     <script defer>
       document.addEventListener("DOMContentLoaded", () => {
-      (async function init() {
-        await Session.requireAuth();
-        const list = document.getElementById("history-list");
-        const alertBox = document.getElementById("alert");
-
-        try {
-          const letters = await Api.listLetters();
-          list.innerHTML = "";
-
-          if (!letters.length) {
-            list.innerHTML =
-              '<li class="empty-state">No letters yet. <a href="templates.html">Create your first letter</a>.</li>';
-            return;
-          }
-
-          letters.forEach((letter) => {
-            const item = document.createElement("li");
-            item.className = "history-item";
-            const patient = letter.patient_name || "Patient";
-            item.innerHTML = `
-              <div>
-                <h3>${letter.template_label}</h3>
-                <div class="history-meta">${patient} · ${Ui.formatDate(letter.created_at)}</div>
-              </div>
-            `;
-            const actions = document.createElement("div");
-            actions.className = "btn-row";
-
-            const download = document.createElement("button");
-            download.type = "button";
-            download.className = "btn btn-secondary";
-            download.textContent = "Download PDF";
-            download.addEventListener("click", async () => {
-              Ui.clearAlert(alertBox);
-              download.disabled = true;
-              try {
-                const link = await Api.downloadLetter(letter.id);
-                window.open(link.url, "_blank", "noopener,noreferrer");
-              } catch (error) {
-                Ui.showAlert(alertBox, error.message);
-              } finally {
-                download.disabled = false;
-              }
-            });
-
-            const remove = document.createElement("button");
-            remove.type = "button";
-            remove.className = "btn btn-ghost";
-            remove.textContent = "Delete";
-            remove.addEventListener("click", async () => {
-              if (!window.confirm("Remove this letter from your history and from storage?")) {
-                return;
-              }
-              Ui.clearAlert(alertBox);
-              remove.disabled = true;
-              try {
-                await Api.deleteLetter(letter.id);
-                item.remove();
-                if (!list.children.length) {
-                  list.innerHTML =
-                    '<li class="empty-state">No letters yet. <a href="templates.html">Create your first letter</a>.</li>';
-                }
-              } catch (error) {
-                Ui.showAlert(alertBox, error.message);
-                remove.disabled = false;
-              }
-            });
-
-            actions.appendChild(download);
-            actions.appendChild(remove);
-            item.appendChild(actions);
-            list.appendChild(item);
-          });
-        } catch (error) {
-          Ui.showAlert(alertBox, error.message);
+        const node = document.getElementById("search-icon");
+        if (node && typeof Icons !== "undefined") {
+          node.innerHTML = Icons.svg("search", "icon");
         }
-      })();
       });
     </script>
   </body>

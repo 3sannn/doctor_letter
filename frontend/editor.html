@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f6f4f1" />
+    <meta name="theme-color" content="#f3f1ec" />
     <title>Edit letter | Doctor Letter</title>
-    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/main.css?v=4" />
     <link href="vendor/quill/quill.snow.css" rel="stylesheet" />
   </head>
   <body>
@@ -18,51 +18,89 @@
       <main>
         <div id="alert" aria-live="polite"></div>
 
-        <section class="card editor-shell">
-          <div>
-            <h1 id="template-title" class="page-title">Edit letter</h1>
-            <p class="subtle" id="template-description"></p>
-            <p class="hint" id="autosave-status"></p>
-            <div class="field">
-              <label for="patient-name">Patient name</label>
-              <input id="patient-name" type="text" placeholder="Updates matching text in the letter" />
+        <section class="card editor-layout">
+          <header class="editor-header">
+            <div>
+              <h1 id="template-title" class="page-title">Edit letter</h1>
+              <p class="subtle" id="template-description"></p>
             </div>
-            <div id="editor" class="editor-panel" aria-label="Letter content"></div>
+            <p class="status-line" id="autosave-status" aria-live="polite"></p>
+          </header>
+
+          <div class="editor-tabs" role="tablist" aria-label="Editor panels">
+            <button type="button" class="editor-tab is-active" role="tab" id="tab-edit" aria-selected="true" aria-controls="panel-edit">
+              Edit
+            </button>
+            <button type="button" class="editor-tab" role="tab" id="tab-sheet" aria-selected="false" aria-controls="panel-sheet">
+              Sheet view
+            </button>
           </div>
 
-          <aside class="side-panel">
-            <h3>Before you save</h3>
-            <ul>
-              <li>Preview the PDF if layout matters.</li>
-              <li>Your draft saves as you edit.</li>
-              <li>Final copies stay in your history for download.</li>
-            </ul>
-            <div class="btn-row">
-              <button type="button" class="btn btn-secondary" id="preview-letter">Preview PDF</button>
-              <button type="button" class="btn btn-primary" id="save-letter">Generate and save PDF</button>
+          <div class="editor-columns">
+            <div class="editor-main" id="panel-edit" role="tabpanel" aria-labelledby="tab-edit">
+              <div class="field">
+                <label for="patient-name">Patient name</label>
+                <input id="patient-name" type="text" autocomplete="off" placeholder="Used in the letter and your records" />
+              </div>
+              <div id="editor" class="editor-panel" aria-label="Letter content"></div>
             </div>
-          </aside>
+
+            <aside class="editor-aside">
+              <div
+                id="panel-sheet"
+                class="doc-sheet-wrap"
+                role="tabpanel"
+                aria-labelledby="tab-sheet"
+                hidden
+              >
+                <p class="doc-sheet-label">Layout preview</p>
+                <div class="doc-sheet" aria-label="Letter layout preview">
+                  <div class="doc-sheet-body letter-preview-content" id="letter-sheet-content">
+                    <p class="letter-preview-placeholder">Your letter text will appear here as you edit.</p>
+                  </div>
+                </div>
+                <p class="hint">PDF output uses the same content. Use Preview PDF for an exact print check.</p>
+              </div>
+
+              <div class="editor-actions-panel">
+                <h2 class="section-title">Next steps</h2>
+                <ul class="checklist">
+                  <li>Review patient name and dates.</li>
+                  <li>Preview PDF when layout matters.</li>
+                  <li>Finalize when the letter is ready to keep.</li>
+                </ul>
+                <div class="btn-row editor-action-buttons">
+                  <button type="button" class="btn btn-secondary" id="preview-letter">Preview PDF</button>
+                  <button type="button" class="btn btn-primary" id="save-letter">Finalize and save</button>
+                </div>
+                <p class="hint finalize-hint" id="finalize-hint" hidden>
+                  Finalizing creates a PDF in your history. Your draft for this template will be cleared.
+                </p>
+              </div>
+            </aside>
+          </div>
         </section>
       </main>
     </div>
 
     <div id="preview-modal" class="modal-overlay" hidden>
-      <div class="modal-card" role="dialog" aria-labelledby="preview-title">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="preview-title">
         <div class="modal-header">
-          <h2 id="preview-title" class="modal-title">Letter preview</h2>
+          <h2 id="preview-title" class="modal-title">PDF preview</h2>
           <button type="button" class="btn btn-ghost" id="close-preview">Close</button>
         </div>
         <iframe id="preview-frame" class="preview-frame" title="PDF preview"></iframe>
       </div>
     </div>
 
-    <script src="js/profile-cache.js" defer></script>
-    <script src="js/workspace-cache.js" defer></script>
-    <script src="js/http-client.js" defer></script>
-    <script src="js/api.js" defer></script>
-    <script src="js/session.js" defer></script>
-    <script src="js/ui.js" defer></script>
+    <script src="js/profile-cache.js?v=2" defer></script>
+    <script src="js/workspace-cache.js?v=2" defer></script>
+    <script src="js/http-client.js?v=2" defer></script>
+    <script src="js/api.js?v=2" defer></script>
+    <script src="js/session.js?v=2" defer></script>
+    <script src="js/icons.js?v=2" defer></script>
+    <script src="js/ui.js?v=2" defer></script>
     <script src="vendor/quill/quill.js" defer></script>
-    <script src="js/editor-page.js" defer></script>
+    <script src="js/editor-page.js?v=3" defer></script>
   </body>
 </html>

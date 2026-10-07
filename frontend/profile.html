@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f6f4f1" />
+    <meta name="theme-color" content="#f3f1ec" />
     <title>Your profile | Doctor Letter</title>
-    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/main.css?v=3" />
   </head>
   <body>
-    <div class="shell">
+    <div class="shell shell-narrow">
       <header class="site-header">
         <div class="brand">Doctor <span>Letter</span></div>
         <a class="btn btn-ghost" href="dashboard.html">Workspace</a>
@@ -16,13 +16,13 @@
 
       <main class="card">
         <h1 class="page-title">Your details</h1>
-        <p class="subtle">Saved with your account. New letters pull your name and registration from here.</p>
+        <p class="subtle">Used on letterheads and templates. Your mobile number identifies your account.</p>
         <div id="alert" aria-live="polite"></div>
 
         <form id="profile-form">
           <div class="field">
             <label for="mobile">Mobile number</label>
-            <input id="mobile" type="text" disabled />
+            <input id="mobile" type="text" disabled aria-readonly="true" />
           </div>
           <div class="field">
             <label for="full-name">Full name</label>
@@ -41,23 +41,24 @@
             <input id="clinic-address" type="text" />
           </div>
           <div class="btn-row">
-            <button type="submit" class="btn btn-primary">Save profile</button>
+            <button type="submit" class="btn btn-primary" id="profile-save">Save profile</button>
           </div>
         </form>
       </main>
     </div>
 
-    <script src="js/profile-cache.js" defer></script>
-    <script src="js/workspace-cache.js" defer></script>
-    <script src="js/http-client.js" defer></script>
-    <script src="js/api.js" defer></script>
-    <script src="js/session.js" defer></script>
-    <script src="js/ui.js" defer></script>
+    <script src="js/profile-cache.js?v=2" defer></script>
+    <script src="js/workspace-cache.js?v=2" defer></script>
+    <script src="js/http-client.js?v=2" defer></script>
+    <script src="js/api.js?v=2" defer></script>
+    <script src="js/session.js?v=2" defer></script>
+    <script src="js/ui.js?v=2" defer></script>
     <script defer>
       document.addEventListener("DOMContentLoaded", () => {
         (async function init() {
           await Session.requireAuth();
           const alertBox = document.getElementById("alert");
+          const saveBtn = document.getElementById("profile-save");
           const cached = ProfileCache.read();
           if (cached) {
             document.getElementById("mobile").value = cached.mobile;
@@ -76,6 +77,7 @@
           document.getElementById("profile-form").addEventListener("submit", async (event) => {
             event.preventDefault();
             Ui.clearAlert(alertBox);
+            Ui.setButtonLoading(saveBtn, true, "Saving…");
             try {
               await Api.saveProfile({
                 full_name: document.getElementById("full-name").value.trim(),
@@ -84,8 +86,10 @@
                 clinic_address: document.getElementById("clinic-address").value.trim(),
               });
               Ui.showAlert(alertBox, "Profile saved.", "success");
-            } catch (error) {
-              Ui.showAlert(alertBox, error.message);
+            } catch {
+              Ui.showAlert(alertBox, "We could not save your profile. Please try again.");
+            } finally {
+              Ui.setButtonLoading(saveBtn, false);
             }
           });
         })();

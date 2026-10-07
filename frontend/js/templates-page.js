@@ -1,3 +1,9 @@
+function escapeTemplateText(value) {
+  const node = document.createElement("span");
+  node.textContent = value == null ? "" : String(value);
+  return node.innerHTML;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   (async function initTemplatesPage() {
     await Session.requireAuth();
@@ -11,6 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
       general: "General",
       custom: "Custom",
     };
+
+    root.innerHTML = '<p class="list-loading" aria-busy="true">Loading templates…</p>';
 
     try {
       const templates = await Api.listTemplates();
@@ -46,7 +54,11 @@ document.addEventListener("DOMContentLoaded", () => {
           const button = document.createElement("button");
           button.type = "button";
           button.className = "template-tile";
-          button.innerHTML = `<strong>${item.label}</strong><span>${item.description}</span>`;
+          button.innerHTML = `
+            <span class="template-tile-icon">${Icons.svg("document", "icon icon-muted")}</span>
+            <strong>${escapeTemplateText(item.label)}</strong>
+            <span>${escapeTemplateText(item.description)}</span>
+          `;
           button.addEventListener("click", () => {
             window.location.href = `editor.html?template=${encodeURIComponent(item.slug)}`;
           });

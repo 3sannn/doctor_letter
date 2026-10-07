@@ -53,15 +53,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      submitBtn.disabled = true;
-      submitBtn.setAttribute("aria-busy", "true");
+      Ui.setButtonLoading(submitBtn, true, "Signing in…");
       try {
         await Api.startSession(mobile, companyField ? companyField.value : "");
         window.location.href = "dashboard.html";
       } catch (error) {
         Ui.showAlert(alertBox, error.message);
-        submitBtn.disabled = false;
-        submitBtn.removeAttribute("aria-busy");
+        Ui.setButtonLoading(submitBtn, false);
       }
     });
   })();
