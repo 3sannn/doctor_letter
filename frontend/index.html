@@ -3,63 +3,91 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#efece6" />
+    <meta name="theme-color" content="#f6f7f7" />
     <title>Doctor Letter</title>
-    <link rel="stylesheet" href="css/main.css?v=7" />
+    <link rel="icon" href="/images/logo-mark.jpg" type="image/jpeg" />
+    <link rel="apple-touch-icon" href="/images/logo-mark.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="/images/brain-illustration.png" as="image" />
+    <link rel="stylesheet" href="css/main.css?v=17" />
   </head>
   <body class="sign-in-page">
-    <div class="shell shell-narrow">
-      <header class="site-header site-header-minimal">
-        <div class="brand">Doctor <span>Letter</span></div>
-      </header>
+    <div class="sign-in-split">
+      <aside class="sign-in-visual" aria-hidden="true">
+        <img
+          class="sign-in-brain"
+          src="/images/brain-illustration.png"
+          alt=""
+          width="720"
+          height="720"
+          decoding="async"
+          fetchpriority="high"
+        />
+      </aside>
 
-      <main class="card hero">
-        <h1>Make your letters with ease</h1>
-        <p class="sign-in-lead">
-          For doctors who write referral letters, certificates, and clinic correspondence.
-          Sign in with your mobile number to open your workspace.
-        </p>
+      <section class="sign-in-panel">
+        <div class="sign-in-panel-inner sign-in-enter">
+          <header class="sign-in-brand">
+            <div class="brand brand-with-logo">
+              <img
+                class="brand-logo"
+                src="/images/logo-mark.jpg"
+                alt=""
+                width="40"
+                height="40"
+                decoding="async"
+              />
+              <span class="brand-text">Doctor <span class="brand-accent">Letter</span></span>
+            </div>
+          </header>
 
-        <div id="alert" aria-live="polite"></div>
+          <h1 class="sign-in-title">Sign in</h1>
+          <p class="sign-in-lead">
+            Welcome back. Enter your mobile number to open your workspace and continue your letters.
+          </p>
 
-        <form id="entry-form" class="card card-inset" novalidate>
-          <div class="field">
-            <label for="mobile">Mobile number</label>
-            <input
-              id="mobile"
-              name="mobile"
-              type="tel"
-              inputmode="numeric"
-              autocomplete="tel"
-              autocapitalize="off"
-              autocorrect="off"
-              spellcheck="false"
-              maxlength="15"
-              pattern="[0-9]{10,15}"
-              placeholder="10-digit mobile number"
-              required
-              aria-describedby="entry-hint"
-            />
-            <span class="hint" id="entry-hint">
-              Digits only. Your session uses a secure cookie on this device.
-            </span>
-          </div>
+          <div id="alert" aria-live="polite"></div>
 
-          <div class="visually-hidden" aria-hidden="true">
-            <label for="company">Company</label>
-            <input id="company" name="company" type="text" tabindex="-1" autocomplete="off" />
-          </div>
+          <form id="entry-form" class="sign-in-form" novalidate>
+            <div class="field">
+              <label for="mobile">Mobile number</label>
+              <input
+                id="mobile"
+                name="mobile"
+                type="tel"
+                inputmode="numeric"
+                autocomplete="tel"
+                autocapitalize="off"
+                autocorrect="off"
+                spellcheck="false"
+                maxlength="15"
+                pattern="[0-9]{10,15}"
+                placeholder="10-digit mobile number"
+                required
+                aria-describedby="entry-hint"
+              />
+              <span class="hint" id="entry-hint">
+                Digits only. Your session uses a secure cookie on this device.
+              </span>
+            </div>
 
-          <div class="btn-row">
-            <button type="submit" class="btn btn-primary" id="entry-submit">Continue to workspace</button>
-          </div>
-        </form>
+            <div class="visually-hidden" aria-hidden="true">
+              <label for="company">Company</label>
+              <input id="company" name="company" type="text" tabindex="-1" autocomplete="off" />
+            </div>
 
-        <p class="sign-in-trust">
-          <span id="trust-icon" aria-hidden="true"></span>
-          <span>Patient information is handled carefully. Read our <a href="/privacy">privacy and data handling</a></span>
-        </p>
-      </main>
+            <div class="btn-row sign-in-submit">
+              <button type="submit" class="btn btn-primary btn-pill" id="entry-submit">Continue to workspace</button>
+            </div>
+          </form>
+
+          <p class="sign-in-trust">
+            <span id="trust-icon" aria-hidden="true"></span>
+            <span>Patient information is handled carefully. Read our <a href="/privacy">privacy and data handling</a></span>
+          </p>
+        </div>
+      </section>
     </div>
 
     <script src="js/profile-cache.js?v=2" defer></script>

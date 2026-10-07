@@ -23,7 +23,12 @@ class StaticCacheMiddleware(BaseHTTPMiddleware):
         path = request.url.path
         settings = get_settings()
         max_age = settings.static_cache_seconds
-        if path.startswith("/css/") or path.startswith("/js/") or path.startswith("/vendor/"):
+        if (
+            path.startswith("/css/")
+            or path.startswith("/js/")
+            or path.startswith("/vendor/")
+            or path.startswith("/images/")
+        ):
             response.headers["Cache-Control"] = f"public, max-age={max_age}, immutable"
         return response
 
