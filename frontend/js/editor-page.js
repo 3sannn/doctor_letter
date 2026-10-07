@@ -100,17 +100,45 @@
       }
     }
 
-    function openPreviewModal(base64Pdf) {
-      const overlay = document.getElementById("preview-modal");
-      const frame = document.getElementById("preview-frame");
-      revokePreviewObjectUrl();
-      const binary = atob(base64Pdf);
-      const bytes = new Uint8Array(binary.length);
-      for (let i = 0; i < binary.length; i += 1) {
-        bytes[i] = binary.charCodeAt(i);
+    async function pdfBlobFromBase64(base64Pdf) {
+      try {
+        const response = await fetch(`data:application/pdf;base64,${base64Pdf}`);
+        return await response.blob();
+      } catch {
+        const binary = atob(base64Pdf);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i += 1) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        return new Blob([bytes], { type: "application/pdf" });
       }
-      previewObjectUrl = URL.createObjectURL(new Blob([bytes], { type: "application/pdf" }));
-      frame.src = previewObjectUrl;
+    }
+
+    function bindPreviewLinks(url) {
+      const openLink = document.getElementById("preview-open-link");
+      const downloadLink = document.getElementById("preview-download-link");
+      if (openLink) {
+        openLink.href = url;
+      }
+      if (downloadLink) {
+        downloadLink.href = url;
+      }
+    }
+
+    async function openPreviewModal(base64Pdf) {
+      const overlay = document.getElementById("preview-modal");
+      const objectEl = document.getElementById("preview-object");
+      const openLink = document.getElementById("preview-open-link");
+
+      revokePreviewObjectUrl();
+      const blob = await pdfBlobFromBase64(base64Pdf);
+      previewObjectUrl = URL.createObjectURL(blob);
+      bindPreviewLinks(previewObjectUrl);
+
+      if (objectEl) {
+        objectEl.data = previewObjectUrl;
+      }
+
       overlay.hidden = false;
       document.body.classList.add("modal-open");
       document.getElementById("close-preview")?.focus();
@@ -118,9 +146,12 @@
 
     function closePreviewModal() {
       const overlay = document.getElementById("preview-modal");
-      const frame = document.getElementById("preview-frame");
+      const objectEl = document.getElementById("preview-object");
       overlay.hidden = true;
-      frame.src = "";
+      if (objectEl) {
+        objectEl.removeAttribute("data");
+      }
+      bindPreviewLinks("#");
       revokePreviewObjectUrl();
       document.body.classList.remove("modal-open");
     }
@@ -242,7 +273,7 @@
             template_slug: templateSlug,
             html_content: quill.root.innerHTML,
           });
-          openPreviewModal(result.pdf_base64);
+          await openPreviewModal(result.pdf_base64);
         } catch {
           Ui.showAlert(
             alertBox,
@@ -253,9 +284,17 @@
         }
       });
 
-      document.getElementById("close-preview").addEventListener("click", closePreviewModal);
-      document.getElementById("preview-modal").addEventListener("click", (event) => {
-        if (event.target.id === "preview-modal") {
+      const previewModal = document.getElementById("preview-modal");
+      const previewCard = previewModal?.querySelector(".modal-card");
+      document.getElementById("close-preview")?.addEventListener("click", (event) => {
+        event.preventDefault();
+        closePreviewModal();
+      });
+      previewCard?.addEventListener("click", (event) => {
+        event.stopPropagation();
+      });
+      previewModal?.addEventListener("click", (event) => {
+        if (event.target === previewModal) {
           closePreviewModal();
         }
       });

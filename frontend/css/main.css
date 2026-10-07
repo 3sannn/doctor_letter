@@ -81,6 +81,12 @@ body.page-busy a.btn {
   opacity: 0.85;
 }
 
+body.page-busy .modal-overlay .btn,
+body.page-busy .modal-overlay a.btn {
+  pointer-events: auto;
+  opacity: 1;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -707,14 +713,65 @@ a.btn:hover {
   gap: 0.65rem;
   padding: 0.75rem 0.9rem;
   border-bottom: 1px solid var(--line);
+  position: relative;
+  z-index: 3;
+  flex-shrink: 0;
+  background: var(--surface);
 }
 
-.preview-frame {
-  width: 100%;
+.preview-modal-body {
   flex: 1;
-  min-height: 55vh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-object {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: min(48vh, 480px);
   border: none;
   background: #ebe8e3;
+}
+
+.preview-inline-hint {
+  margin: 0;
+  padding: 1.25rem;
+  color: var(--text-soft);
+  font-size: 0.92rem;
+  text-align: center;
+}
+
+.preview-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  padding: 0.75rem 0.9rem;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  position: relative;
+  z-index: 3;
+  flex-shrink: 0;
+}
+
+.preview-modal-actions .btn {
+  flex: 1 1 9rem;
+  min-height: var(--tap);
+}
+
+.modal-overlay .modal-card .btn,
+.modal-overlay .modal-card a.btn {
+  pointer-events: auto;
+  position: relative;
+  z-index: 4;
+}
+
+body.modal-open .modal-overlay {
+  pointer-events: auto;
+}
+
+body.modal-open .modal-overlay .modal-card {
+  pointer-events: auto;
 }
 
 .page-title {
@@ -1206,7 +1263,7 @@ a.btn:hover {
   outline-offset: 2px;
 }
 
-.preview-frame {
+.preview-object {
   background: #e8e5e0;
 }
 
@@ -1240,6 +1297,45 @@ a.btn:hover {
   .editor-shell {
     display: flex;
     flex-direction: column;
+  }
+}
+
+.history-item,
+.template-tile {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 4.75rem;
+}
+
+@media (pointer: coarse) {
+  .shell > main {
+    animation: none;
+  }
+
+  .history-list > .history-item {
+    animation: none;
+  }
+
+  .modal-overlay,
+  .modal-overlay .modal-card {
+    animation: none;
+  }
+
+  .card,
+  .btn,
+  .template-tile {
+    transition-duration: 0.12s;
+  }
+
+  .preview-object {
+    min-height: 36vh;
+  }
+
+  .preview-modal-actions {
+    flex-direction: column;
+  }
+
+  .preview-modal-actions .btn {
+    width: 100%;
   }
 }
 
