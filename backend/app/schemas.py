@@ -1,7 +1,15 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_serializer, field_validator
+
+
+def datetime_to_utc_z(value: datetime) -> str:
+    if value.tzinfo is None:
+        aware = value.replace(tzinfo=timezone.utc)
+    else:
+        aware = value.astimezone(timezone.utc)
+    return aware.isoformat().replace("+00:00", "Z")
 
 
 class SessionCreate(BaseModel):
@@ -120,6 +128,10 @@ class LetterSummary(BaseModel):
     patient_name: str
     created_at: datetime
 
+    @field_serializer("created_at")
+    def serialize_created_at(self, value: datetime) -> str:
+        return datetime_to_utc_z(value)
+
 
 class LetterDownload(BaseModel):
     url: str
@@ -131,6 +143,10 @@ class DraftSummary(BaseModel):
     template_slug: str
     patient_name: str
     updated_at: datetime
+
+    @field_serializer("updated_at")
+    def serialize_updated_at(self, value: datetime) -> str:
+        return datetime_to_utc_z(value)
 
 
 class DraftDetail(DraftSummary):

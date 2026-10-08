@@ -23,12 +23,31 @@ const Ui = (() => {
     }
   }
 
+  function parseApiDateTime(iso) {
+    if (iso == null || iso === "") {
+      return null;
+    }
+    const raw = String(iso).trim();
+    if (!raw) {
+      return null;
+    }
+    if (/[zZ]$/.test(raw) || /[+-]\d{2}:\d{2}$/.test(raw)) {
+      return new Date(raw);
+    }
+    const normalized = raw.includes("T") ? `${raw}Z` : `${raw}T00:00:00Z`;
+    return new Date(normalized);
+  }
+
   function formatDate(iso) {
     try {
+      const date = parseApiDateTime(iso);
+      if (!date || Number.isNaN(date.getTime())) {
+        return iso;
+      }
       return new Intl.DateTimeFormat(undefined, {
         dateStyle: "medium",
         timeStyle: "short",
-      }).format(new Date(iso));
+      }).format(date);
     } catch {
       return iso;
     }
