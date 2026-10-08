@@ -7,23 +7,16 @@
     <title>Edit letter | Doctor Letter</title>
     <link rel="icon" href="/images/logo-mark.jpg" type="image/jpeg" />
     <link rel="apple-touch-icon" href="/images/logo-mark.jpg" />
-    <link rel="stylesheet" href="css/main.css?v=14" />
+    <link rel="stylesheet" href="css/main.css?v=25" />
     <link href="vendor/quill/quill.snow.css" rel="stylesheet" />
   </head>
-  <body>
-    <div class="shell">
-      <header class="site-header">
-        <div class="brand brand-with-logo">
-          <img class="brand-logo" src="/images/logo-mark.jpg" alt="" width="36" height="36" decoding="async" />
-          <span class="brand-text">Doctor <span class="brand-accent">Letter</span></span>
-        </div>
-        <a class="btn btn-ghost" href="/templates">Templates</a>
-      </header>
-
+  <body class="page-app page-editor" data-nav-page="editor">
+    <header id="app-navbar" role="banner"></header>
+    <div class="shell app-shell">
       <main>
         <div id="alert" aria-live="polite"></div>
 
-        <section class="card editor-layout">
+        <section class="card editor-layout motion-rise">
           <header class="editor-header">
             <div>
               <h1 id="template-title" class="page-title">Edit letter</h1>
@@ -64,22 +57,22 @@
                     <p class="letter-preview-placeholder">Your letter text will appear here as you edit.</p>
                   </div>
                 </div>
-                <p class="hint">PDF output uses the same content. Use Preview PDF for an exact print check.</p>
+                <p class="hint">Sheet view matches your PDF. Tap Preview when layout matters.</p>
               </div>
 
               <div class="editor-actions-panel">
                 <h2 class="section-title">Next steps</h2>
                 <ul class="checklist">
-                  <li>Review patient name and dates.</li>
-                  <li>Preview PDF when layout matters.</li>
-                  <li>Finalize when the letter is ready to keep.</li>
+                  <li>Check the patient name and dates.</li>
+                  <li>Preview the PDF if layout matters.</li>
+                  <li>Finalize when you are ready to keep it.</li>
                 </ul>
                 <div class="btn-row editor-action-buttons">
                   <button type="button" class="btn btn-secondary" id="preview-letter">Preview PDF</button>
                   <button type="button" class="btn btn-primary" id="save-letter">Finalize and save</button>
                 </div>
                 <p class="hint finalize-hint" id="finalize-hint" hidden>
-                  Finalizing creates a PDF in your history. Your draft for this template will be cleared.
+                  Finalize saves a PDF to your history and clears this draft.
                 </p>
               </div>
             </aside>
@@ -89,7 +82,7 @@
     </div>
 
     <div id="preview-modal" class="modal-overlay" hidden>
-      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="preview-title">
+      <div class="modal-card modal-card--preview" role="dialog" aria-modal="true" aria-labelledby="preview-title">
         <div class="modal-header">
           <h2 id="preview-title" class="modal-title">PDF preview</h2>
           <button type="button" class="btn btn-ghost" id="close-preview">Close</button>
@@ -128,8 +121,9 @@
     <script src="js/paths.js?v=1" defer></script>
     <script src="js/session.js?v=3" defer></script>
     <script src="js/icons.js?v=2" defer></script>
-    <script src="js/ui.js?v=2" defer></script>
+    <script src="js/app-nav.js?v=5" defer></script>
+    <script src="js/ui.js?v=4" defer></script>
     <script src="vendor/quill/quill.js" defer></script>
-    <script src="js/editor-page.js?v=8" defer></script>
+    <script src="js/editor-page.js?v=9" defer></script>
   </body>
 </html>

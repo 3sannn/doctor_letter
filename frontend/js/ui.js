@@ -11,7 +11,7 @@ const Ui = (() => {
     }
     container.innerHTML = "";
     const box = document.createElement("div");
-    box.className = `alert alert-${type}`;
+    box.className = `alert alert-${type} alert-enter`;
     box.setAttribute("role", "alert");
     box.textContent = message;
     container.appendChild(box);
@@ -35,9 +35,15 @@ const Ui = (() => {
   }
 
   function setMobileLabel(profile) {
+    if (!profile) {
+      return;
+    }
     const node = document.getElementById("mobile-label");
-    if (node && profile) {
+    if (node) {
       node.textContent = Session.maskMobile(profile.mobile);
+    }
+    if (typeof AppNav !== "undefined") {
+      AppNav.setUserLabel(profile);
     }
   }
 
@@ -81,8 +87,8 @@ const Ui = (() => {
       container.innerHTML = "";
       container.appendChild(
         emptyStateElement({
-          title: "No drafts in progress",
-          body: "When you start a letter, it will appear here until you finalize it.",
+          title: "No drafts yet",
+          body: "Start a letter and your draft will show up here.",
           actionLabel: "Create new letter",
           actionHref: Paths.templates,
           icon: "pen",
@@ -129,7 +135,7 @@ const Ui = (() => {
           const remaining = drafts.filter((row) => row.id !== draft.id);
           renderDraftList(container, remaining, alertBox);
         } catch {
-          showAlert(alertBox, "We could not remove this draft. Please try again.");
+          showAlert(alertBox, "Could not remove this draft. Try again.");
           setButtonLoading(remove, false);
         }
       });

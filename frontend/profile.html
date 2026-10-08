@@ -7,24 +7,17 @@
     <title>Your profile | Doctor Letter</title>
     <link rel="icon" href="/images/logo-mark.jpg" type="image/jpeg" />
     <link rel="apple-touch-icon" href="/images/logo-mark.jpg" />
-    <link rel="stylesheet" href="css/main.css?v=14" />
+    <link rel="stylesheet" href="css/main.css?v=25" />
   </head>
-  <body>
-    <div class="shell shell-narrow">
-      <header class="site-header">
-        <div class="brand brand-with-logo">
-          <img class="brand-logo" src="/images/logo-mark.jpg" alt="" width="36" height="36" decoding="async" />
-          <span class="brand-text">Doctor <span class="brand-accent">Letter</span></span>
-        </div>
-        <a class="btn btn-ghost" href="/dashboard">Workspace</a>
-      </header>
-
-      <main class="card">
+  <body class="page-app page-profile" data-nav-page="profile">
+    <header id="app-navbar" role="banner"></header>
+    <div class="shell app-shell shell-narrow">
+      <main class="card motion-rise">
         <h1 class="page-title">Your details</h1>
-        <p class="subtle">Used on letterheads and templates. Your mobile number identifies your account.</p>
+        <p class="subtle">This appears on your letters. Your mobile number is how you sign in.</p>
         <div id="alert" aria-live="polite"></div>
 
-        <form id="profile-form">
+        <form id="profile-form" class="motion-stagger">
           <div class="field">
             <label for="mobile">Mobile number</label>
             <input id="mobile" type="text" disabled aria-readonly="true" />
@@ -49,6 +42,12 @@
             <button type="submit" class="btn btn-primary" id="profile-save">Save profile</button>
           </div>
         </form>
+
+        <div class="profile-signout-mobile btn-row">
+          <button type="button" class="btn btn-ghost profile-signout-btn" id="profile-sign-out">
+            Sign out
+          </button>
+        </div>
       </main>
     </div>
 
@@ -58,11 +57,16 @@
     <script src="js/api.js?v=2" defer></script>
     <script src="js/paths.js?v=1" defer></script>
     <script src="js/session.js?v=3" defer></script>
-    <script src="js/ui.js?v=2" defer></script>
+    <script src="js/icons.js?v=2" defer></script>
+    <script src="js/app-nav.js?v=5" defer></script>
+    <script src="js/ui.js?v=4" defer></script>
     <script defer>
       document.addEventListener("DOMContentLoaded", () => {
         (async function init() {
-          await Session.requireAuth();
+          const profileSession = await Session.requireAuth();
+          if (profileSession) {
+            Ui.setMobileLabel(profileSession);
+          }
           const alertBox = document.getElementById("alert");
           const saveBtn = document.getElementById("profile-save");
           const cached = ProfileCache.read();
@@ -74,6 +78,7 @@
             document.getElementById("clinic-address").value = cached.clinic_address || "";
           }
           const profile = await Api.getProfile();
+          Ui.setMobileLabel(profile);
           document.getElementById("mobile").value = profile.mobile;
           document.getElementById("full-name").value = profile.full_name || "";
           document.getElementById("registration").value = profile.registration_number || "";
@@ -93,7 +98,7 @@
               });
               Ui.showAlert(alertBox, "Profile saved.", "success");
             } catch {
-              Ui.showAlert(alertBox, "We could not save your profile. Please try again.");
+              Ui.showAlert(alertBox, "Could not save. Try again.");
             } finally {
               Ui.setButtonLoading(saveBtn, false);
             }

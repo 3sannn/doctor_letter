@@ -7,21 +7,14 @@
     <title>Past letters | Doctor Letter</title>
     <link rel="icon" href="/images/logo-mark.jpg" type="image/jpeg" />
     <link rel="apple-touch-icon" href="/images/logo-mark.jpg" />
-    <link rel="stylesheet" href="css/main.css?v=14" />
+    <link rel="stylesheet" href="css/main.css?v=25" />
   </head>
-  <body>
-    <div class="shell">
-      <header class="site-header">
-        <div class="brand brand-with-logo">
-          <img class="brand-logo" src="/images/logo-mark.jpg" alt="" width="36" height="36" decoding="async" />
-          <span class="brand-text">Doctor <span class="brand-accent">Letter</span></span>
-        </div>
-        <a class="btn btn-ghost" href="/dashboard">Workspace</a>
-      </header>
-
-      <main class="card">
+  <body class="page-app page-history" data-nav-page="history">
+    <header id="app-navbar" role="banner"></header>
+    <div class="shell app-shell">
+      <main class="card motion-rise">
         <h1 class="page-title">Past letters</h1>
-        <p class="subtle">Finalized PDFs you can download again. Links expire after a short time.</p>
+        <p class="subtle">Download letters you have already saved. Links work for a short time.</p>
         <div id="alert" aria-live="polite"></div>
 
         <div class="toolbar-row">
@@ -48,8 +41,9 @@
     <script src="js/paths.js?v=1" defer></script>
     <script src="js/session.js?v=3" defer></script>
     <script src="js/icons.js?v=2" defer></script>
-    <script src="js/ui.js?v=3" defer></script>
-    <script src="js/history-page.js?v=4" defer></script>
+    <script src="js/app-nav.js?v=5" defer></script>
+    <script src="js/ui.js?v=4" defer></script>
+    <script src="js/history-page.js?v=5" defer></script>
     <script defer>
       document.addEventListener("DOMContentLoaded", () => {
         const node = document.getElementById("search-icon");

@@ -7,23 +7,16 @@
     <title>Workspace | Doctor Letter</title>
     <link rel="icon" href="/images/logo-mark.jpg" type="image/jpeg" />
     <link rel="apple-touch-icon" href="/images/logo-mark.jpg" />
-    <link rel="stylesheet" href="css/main.css?v=14" />
+    <link rel="stylesheet" href="css/main.css?v=25" />
   </head>
-  <body>
-    <div class="shell">
-      <header class="site-header">
-        <div class="brand brand-with-logo">
-          <img class="brand-logo" src="/images/logo-mark.jpg" alt="" width="36" height="36" decoding="async" />
-          <span class="brand-text">Doctor <span class="brand-accent">Letter</span></span>
-        </div>
-        <p class="subtle mobile-tag" id="mobile-label"></p>
-      </header>
-
-      <main class="grid two">
+  <body class="page-app page-dashboard" data-nav-page="dashboard">
+    <header id="app-navbar" role="banner"></header>
+    <div class="shell app-shell">
+      <main class="grid two motion-stagger">
         <section class="card hero card-accent workspace-primary">
           <p class="workspace-greeting" id="workspace-greeting" hidden>Good day</p>
           <h1 class="page-title">Your workspace</h1>
-          <p class="subtle">Start a new letter or continue a draft. Finalized PDFs are in past letters.</p>
+          <p class="subtle">Start a letter or open a draft. Finished PDFs are under Past letters.</p>
           <div class="workspace-actions section-gap">
             <a class="btn btn-primary" href="/templates">Create new letter</a>
             <div class="workspace-links">
@@ -35,7 +28,7 @@
 
         <section class="card">
           <h2 class="section-title">Saved drafts</h2>
-          <p class="subtle">One draft per template until you finalize. Remove a draft you no longer need.</p>
+          <p class="subtle">One draft per template. Remove any you do not need.</p>
           <div id="draft-alert" aria-live="polite"></div>
           <ul id="draft-list" class="history-list section-gap" aria-live="polite"></ul>
           <div class="btn-row btn-row--start section-gap-lg">
@@ -56,7 +49,8 @@
     <script src="js/paths.js?v=1" defer></script>
     <script src="js/session.js?v=3" defer></script>
     <script src="js/icons.js?v=2" defer></script>
-    <script src="js/ui.js?v=3" defer></script>
+    <script src="js/app-nav.js?v=5" defer></script>
+    <script src="js/ui.js?v=4" defer></script>
     <script src="js/dashboard-page.js?v=4" defer></script>
   </body>
 </html>

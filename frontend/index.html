@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+  <head> 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f6f7f7" />
@@ -9,8 +9,12 @@
     <link rel="apple-touch-icon" href="/images/logo-mark.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700&display=swap"
+    />
     <link rel="preload" href="/images/brain-illustration.png" as="image" />
-    <link rel="stylesheet" href="css/main.css?v=17" />
+    <link rel="stylesheet" href="css/main.css?v=25" />
   </head>
   <body class="sign-in-page">
     <div class="sign-in-split">
@@ -44,7 +48,7 @@
 
           <h1 class="sign-in-title">Sign in</h1>
           <p class="sign-in-lead">
-            Welcome back. Enter your mobile number to open your workspace and continue your letters.
+            Enter your mobile number to open your workspace and pick up your letters.
           </p>
 
           <div id="alert" aria-live="polite"></div>
@@ -68,7 +72,7 @@
                 aria-describedby="entry-hint"
               />
               <span class="hint" id="entry-hint">
-                Digits only. Your session uses a secure cookie on this device.
+                Numbers only. We keep you signed in with a secure cookie on this device.
               </span>
             </div>
 
@@ -78,13 +82,13 @@
             </div>
 
             <div class="btn-row sign-in-submit">
-              <button type="submit" class="btn btn-primary btn-pill" id="entry-submit">Continue to workspace</button>
+              <button type="submit" class="btn btn-primary btn-pill" id="entry-submit">Open workspace</button>
             </div>
           </form>
 
           <p class="sign-in-trust">
             <span id="trust-icon" aria-hidden="true"></span>
-            <span>Patient information is handled carefully. Read our <a href="/privacy">privacy and data handling</a></span>
+            <span>We handle patient data with care. <a href="/privacy">Privacy and data handling</a></span>
           </p>
         </div>
       </section>

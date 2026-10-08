@@ -174,6 +174,12 @@
         panelSheet.hidden = isEdit;
         panelEdit.setAttribute("aria-hidden", isEdit ? "false" : "true");
         panelSheet.setAttribute("aria-hidden", isEdit ? "true" : "false");
+        if (!desktopLayout.matches) {
+          const visible = isEdit ? panelEdit : panelSheet;
+          visible.classList.remove("editor-panel-enter");
+          void visible.offsetWidth;
+          visible.classList.add("editor-panel-enter");
+        }
         if (!isEdit) {
           syncSheetPreview();
         } else if (sheetTimer) {
@@ -205,7 +211,10 @@
     }
 
     async function init() {
-      await Session.requireAuth();
+      const sessionProfile = await Session.requireAuth();
+      if (sessionProfile) {
+        Ui.setMobileLabel(sessionProfile);
+      }
       const alertBox = document.getElementById("alert");
 
       if (!templateSlug) {
@@ -277,7 +286,7 @@
         } catch {
           Ui.showAlert(
             alertBox,
-            "We could not build the preview. Your draft is still saved—try again or simplify formatting."
+            "Preview did not load. Your draft is safe—try again in a moment."
           );
         } finally {
           Ui.setButtonLoading(previewBtn, false);
@@ -324,7 +333,7 @@
         } catch {
           Ui.showAlert(
             alertBox,
-            "We could not finalize the letter. Your draft is still here—check storage settings or try again."
+            "Could not save the PDF. Your draft is still here—try again shortly."
           );
           Ui.setButtonLoading(saveBtn, false);
         }

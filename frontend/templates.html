@@ -7,44 +7,60 @@
     <title>Choose template | Doctor Letter</title>
     <link rel="icon" href="/images/logo-mark.jpg" type="image/jpeg" />
     <link rel="apple-touch-icon" href="/images/logo-mark.jpg" />
-    <link rel="stylesheet" href="css/main.css?v=14" />
+    <link rel="stylesheet" href="css/main.css?v=25" />
   </head>
-  <body>
-    <div class="shell">
-      <header class="site-header">
-        <div class="brand brand-with-logo">
-          <img class="brand-logo" src="/images/logo-mark.jpg" alt="" width="36" height="36" decoding="async" />
-          <span class="brand-text">Doctor <span class="brand-accent">Letter</span></span>
+  <body class="page-app page-templates" data-nav-page="templates">
+    <header id="app-navbar" class="app-navbar" role="banner">
+      <div class="app-navbar-wrap">
+        <div class="app-navbar-glass app-navbar-top">
+          <a class="app-navbar-brand brand brand-with-logo" href="/dashboard">
+            <img class="brand-logo" src="/images/logo-mark.jpg" alt="" width="36" height="36" decoding="async" />
+            <span class="brand-text">Doctor <span class="brand-accent">Letter</span></span>
+          </a>
+          <nav class="app-navbar-desktop" aria-label="Main navigation">
+            <a href="/dashboard" class="app-nav-link" data-nav-id="dashboard"><span class="app-nav-text">Workspace</span></a>
+            <a href="/templates" class="app-nav-link is-active" data-nav-id="templates" aria-current="page"><span class="app-nav-text">Templates</span></a>
+            <a href="/history" class="app-nav-link" data-nav-id="history"><span class="app-nav-text">Past letters</span></a>
+            <a href="/profile" class="app-nav-link" data-nav-id="profile"><span class="app-nav-text">Profile</span></a>
+          </nav>
+          <button type="button" class="app-nav-signout btn btn-ghost" id="nav-sign-out">Sign out</button>
         </div>
-        <a class="btn btn-ghost" href="/dashboard">Workspace</a>
-      </header>
-
-      <main>
+      </div>
+      <nav class="app-navbar-mobile" aria-label="Main navigation">
+        <div class="app-navbar-mobile-inner">
+          <a href="/dashboard" class="app-nav-link" data-nav-id="dashboard"><span class="app-nav-text">Home</span></a>
+          <a href="/templates" class="app-nav-link is-active" data-nav-id="templates" aria-current="page"><span class="app-nav-text">New</span></a>
+          <a href="/history" class="app-nav-link" data-nav-id="history"><span class="app-nav-text">History</span></a>
+          <a href="/profile" class="app-nav-link" data-nav-id="profile"><span class="app-nav-text">You</span></a>
+        </div>
+      </nav>
+    </header>
+    <div class="shell app-shell">
+      <main class="motion-stagger">
         <section class="card card-accent blank-starter">
           <h2 class="section-title">Write your own letter</h2>
-          <p class="subtle">
-            Start from a blank page with your clinic details at the top. The same editor is used for every template.
-          </p>
+          <p class="subtle">A blank page with your clinic details at the top. Same editor as every template.</p>
           <a class="btn btn-primary" href="/editor?template=blank-letter">Start blank letter</a>
         </section>
 
         <section class="card grid-top">
           <h1 class="page-title">Letter templates</h1>
-          <p class="subtle">Choose a starting point, then edit every line before you finalize.</p>
+          <p class="subtle">Pick a starting point. You can change anything before you save.</p>
           <div id="alert" aria-live="polite"></div>
           <div id="template-sections" class="section-gap" aria-live="polite"></div>
         </section>
       </main>
     </div>
 
-    <script src="js/profile-cache.js?v=2" defer></script>
-    <script src="js/template-cache.js?v=2" defer></script>
+    <script src="js/paths.js?v=1"></script>
+    <script src="js/icons.js?v=2"></script>
     <script src="js/http-client.js?v=2" defer></script>
     <script src="js/api.js?v=2" defer></script>
-    <script src="js/paths.js?v=1" defer></script>
+    <script src="js/profile-cache.js?v=2" defer></script>
+    <script src="js/template-cache.js?v=2" defer></script>
     <script src="js/session.js?v=3" defer></script>
-    <script src="js/icons.js?v=2" defer></script>
-    <script src="js/ui.js?v=2" defer></script>
-    <script src="js/templates-page.js?v=3" defer></script>
+    <script src="js/app-nav.js?v=5" defer></script>
+    <script src="js/ui.js?v=4" defer></script>
+    <script src="js/templates-page.js?v=6" defer></script>
   </body>
 </html>

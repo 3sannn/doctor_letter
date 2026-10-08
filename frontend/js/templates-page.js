@@ -6,7 +6,10 @@ function escapeTemplateText(value) {
 
 document.addEventListener("DOMContentLoaded", () => {
   (async function initTemplatesPage() {
-    await Session.requireAuth();
+    const sessionProfile = await Session.requireAuth();
+    if (sessionProfile) {
+      Ui.setMobileLabel(sessionProfile);
+    }
     const root = document.getElementById("template-sections");
     const alertBox = document.getElementById("alert");
 
@@ -48,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
         section.innerHTML = `<h2 class="section-title">${groupLabels[groupKey]}</h2>`;
 
         const grid = document.createElement("div");
-        grid.className = "grid templates";
+        grid.className = "grid templates motion-stagger";
 
         items.forEach((item) => {
           const button = document.createElement("button");
@@ -68,6 +71,9 @@ document.addEventListener("DOMContentLoaded", () => {
         section.appendChild(grid);
         root.appendChild(section);
       });
+      if (typeof AppNav !== "undefined") {
+        AppNav.applyMotionStagger();
+      }
     } catch (error) {
       Ui.showAlert(alertBox, error.message);
     }

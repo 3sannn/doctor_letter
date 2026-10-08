@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   (async function initHistory() {
-    await Session.requireAuth();
+    const sessionProfile = await Session.requireAuth();
+    if (sessionProfile) {
+      Ui.setMobileLabel(sessionProfile);
+    }
     const list = document.getElementById("history-list");
     const alertBox = document.getElementById("alert");
     const searchInput = document.getElementById("history-search");
@@ -31,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         list.appendChild(
           Ui.emptyStateElement({
             title: "No letters yet",
-            body: "Your finalized letters will appear here with the date and patient label.",
+            body: "Saved letters will show here with the date and patient name.",
             actionLabel: "Create a letter",
             actionHref: Paths.templates,
             icon: "document",
@@ -44,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
         list.appendChild(
           Ui.emptyStateElement({
             title: "No matches",
-            body: "Try a different search term or clear the filter.",
+            body: "Try another word or clear the search box.",
             icon: "search",
           })
         );
@@ -124,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
       list.innerHTML = "";
       Ui.showAlert(
         alertBox,
-        "We could not load your letter history. Your finalized letters are still safe—please refresh the page."
+        "History did not load. Your letters are safe—refresh to try again."
       );
     }
 
